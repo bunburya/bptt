@@ -35,7 +35,7 @@ Victoria                Good Service
 
 The optional `--color` flag will use colour in the output.
 
-# Arrivals
+## Arrivals
 
 This command displays real time arrival predictions for the given stop. 
 
