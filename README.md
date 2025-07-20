@@ -52,7 +52,7 @@ In the above example, `STOP_ID` is the [NaPTAN ID](https://beta-naptan.dft.gov.u
 `--lines` argument (a comma-separated list of line IDs) will display only arrivals for the given lines. The `--count`
 argument, if provided, will display at most the given number of arrivals.
 
-For example@
+For example:
 ```
 ltt arrivals --count 5 490000254D
 ```
