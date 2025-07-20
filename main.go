@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"ltt/output"
 	"ltt/tfl"
@@ -10,6 +11,11 @@ import (
 )
 
 func main() {
+
+	flag.Usage = func() {
+		w := flag.CommandLine.Output()
+		fmt.Fprintf(w, "Usage: ltt COMMAND\navailable commands: status, arrivals\n")
+	}
 
 	if len(os.Args) < 2 {
 		flag.Usage()
@@ -20,11 +26,20 @@ func main() {
 		statusCmd := flag.NewFlagSet("status", flag.ExitOnError)
 		var statusColor bool
 		statusCmd.BoolVar(&statusColor, "color", false, "use colored output")
+		statusCmd.Usage = func() {
+			w := flag.CommandLine.Output()
+			fmt.Fprintf(w, "Usage: ltt status [options] LINE_ID...\noptions:\n")
+			statusCmd.PrintDefaults()
+		}
 		err := statusCmd.Parse(os.Args[2:])
 		if err != nil {
 			log.Fatal(err)
 		}
 		lineIds := statusCmd.Args()
+		if len(lineIds) == 0 {
+			statusCmd.Usage()
+			os.Exit(1)
+		}
 		lines, err := tfl.GetLineStatuses(lineIds)
 		if err != nil {
 			log.Fatal(err)
@@ -45,6 +60,11 @@ func main() {
 			"comma-delimited list of lines/routes to display")
 		var count int
 		arrivalsCmd.IntVar(&count, "count", 0, "number of arrivals to display")
+		arrivalsCmd.Usage = func() {
+			w := flag.CommandLine.Output()
+			fmt.Fprintf(w, "Usage: ltt arrivals [options] STOP_ID\noptions:\n")
+			arrivalsCmd.PrintDefaults()
+		}
 		err := arrivalsCmd.Parse(os.Args[2:])
 		if err != nil {
 			log.Fatal(err)
@@ -55,6 +75,7 @@ func main() {
 		}
 		if len(arrivalsCmd.Args()) != 1 {
 			arrivalsCmd.Usage()
+			os.Exit(1)
 		}
 		arrivals, err := tfl.GetStopArrivals(arrivalsCmd.Args()[0], lines, count)
 		if err != nil {
