@@ -14,7 +14,7 @@ func main() {
 
 	flag.Usage = func() {
 		w := flag.CommandLine.Output()
-		fmt.Fprintf(w, "Usage: ltt COMMAND\navailable commands: status, arrivals\n")
+		fmt.Fprintf(w, "Usage: ltt COMMAND\navailable commands: status, arrivals, nre-departures\n")
 	}
 
 	if len(os.Args) < 2 {
@@ -88,5 +88,33 @@ func main() {
 			table.AddRow(row)
 		}
 		table.Print("\t", true, false)
+	case "nre-departures":
+		nreApiKey := os.Getenv("LTT_NRE_API_KEY")
+		if len(nreApiKey) == 0 {
+			log.Fatal("LTT_NRE_API_KEY environment variable is not set")
+		}
+		nreDepCmd := flag.NewFlagSet("nre-departures", flag.ExitOnError)
+		nreDepCmd.Usage = func() {
+			w := flag.CommandLine.Output()
+			fmt.Fprintf(w, "Usage: ltt nre-departures [options] STATION_ID\noptions:\n")
+			nreDepCmd.PrintDefaults()
+		}
+		err := nreDepCmd.Parse(os.Args[2:])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if len(nreDepCmd.Args()) != 1 {
+			nreDepCmd.Usage()
+			os.Exit(1)
+		}
+
+		depBoard, err := GetDepartureBoard(nreDepCmd.Arg(0), nreApiKey)
+		if err != nil {
+			log.Fatal(err)
+		}
+		table := DisplayDepartureBoard(depBoard)
+		table.Print("\t", true, false)
+
 	}
 }
