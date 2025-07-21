@@ -7,7 +7,7 @@ It is divided into sub-commands. The currently supported commands are:
 
 - `tfl status`: View the status of TfL lines.
 - `tfl arrivals`: View next arrivals at TfL stop.
-- `nre departures` View next departures at a National Rail station.
+- `nre departures`: View next departures at a National Rail station.
 
 ## `tfl status`
 
@@ -25,7 +25,7 @@ any letters being lowercased. Multiple line IDs can be provided.
 
 For example:
 ```
-ltt tfl status bakerloo northern victoria 470 rb1 london-cable-car
+$ ltt tfl status bakerloo northern victoria 470 rb1 london-cable-car
 ```
 
 will produce something like:
