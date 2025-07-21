@@ -1,4 +1,4 @@
-package main
+package nre
 
 import (
 	"ltt/output"

@@ -84,7 +84,7 @@ func (line Line) lineColor() *color.Color {
 	}
 }
 
-func (line Line) ToRow(withLineColor bool) (output.FormattedRow, error) {
+func (line Line) ToRow(withColor bool) (output.FormattedRow, error) {
 	lineCol := output.FormattedText{}
 	statusCol := output.FormattedText{}
 	row := output.FormattedRow{}
@@ -94,7 +94,7 @@ func (line Line) ToRow(withLineColor bool) (output.FormattedRow, error) {
 	}
 	lineColor := line.lineColor()
 	severityColor := mostSevere.severityColor()
-	if lineColor != nil && withLineColor {
+	if lineColor != nil && withColor {
 		lineCol.Add("    ", lineColor)
 		lineCol.Add(" ", nil)
 	}

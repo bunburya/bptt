@@ -78,7 +78,7 @@ func (t *Table) AddRow(row FormattedRow) {
 	t.rows = append(t.rows, row)
 }
 
-func (t *Table) Print(sep string, padded bool, color bool) {
+func (t *Table) Print(sep string, padded bool, withColor bool) {
 	maxRowLen := 0
 	for _, row := range t.rows {
 		maxRowLen = max(maxRowLen, len(row.columns))
@@ -98,7 +98,7 @@ func (t *Table) Print(sep string, padded bool, color bool) {
 	}
 	for _, row := range t.rows {
 		for i, col := range row.columns {
-			if color {
+			if withColor {
 				fmt.Print(col.richText)
 			} else {
 				fmt.Print(col.rawText)

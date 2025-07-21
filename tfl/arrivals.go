@@ -17,6 +17,7 @@ func arrivalsUrl(naptanId string) string {
 
 type Arrival struct {
 	StationName   string `json:"stationName"`
+	LineId        string `json:"lineId"`
 	LineName      string `json:"lineName"`
 	Destination   string `json:"destinationName"`
 	TimeToStation int    `json:"timeToStation"`
@@ -33,40 +34,17 @@ func (a Arrival) ToRow() output.FormattedRow {
 func filterByLine(arrivals []Arrival, lines []string) []Arrival {
 	var filtered []Arrival
 	for _, a := range arrivals {
-		if slices.Contains(lines, a.LineName) {
+		if slices.Contains(lines, a.LineId) {
 			filtered = append(filtered, a)
 		}
 	}
 	return filtered
 }
 
-type StopArrivals struct {
-	NaptanId    string
-	StationName string
-	Arrivals    []Arrival
-}
-
-func NewStopArrivals(naptanId string, arrivals []Arrival, lines []string, count int) (*StopArrivals, error) {
-	if len(arrivals) == 0 {
-		return nil, errors.New("no arrivals provided")
+func GetStopArrivals(naptanId string, lines []string, count int) ([]Arrival, error) {
+	if len(naptanId) == 0 {
+		return nil, errors.New("no naptanId provided")
 	}
-	if len(lines) > 0 {
-		arrivals = filterByLine(arrivals, lines)
-	}
-	sort.Slice(arrivals, func(i, j int) bool {
-		return arrivals[i].TimeToStation < arrivals[j].TimeToStation
-	})
-	if count > 0 {
-		arrivals = arrivals[:min(count, len(arrivals))]
-	}
-	return &StopArrivals{
-		naptanId,
-		arrivals[0].StationName,
-		arrivals,
-	}, nil
-}
-
-func GetStopArrivals(naptanId string, lines []string, count int) (*StopArrivals, error) {
 	url := arrivalsUrl(naptanId)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -82,5 +60,17 @@ func GetStopArrivals(naptanId string, lines []string, count int) (*StopArrivals,
 	if err := json.NewDecoder(resp.Body).Decode(&arrivals); err != nil {
 		return nil, err
 	}
-	return NewStopArrivals(naptanId, arrivals, lines, count)
+	// Filter to relevant lines if they were provided
+	if len(lines) > 0 {
+		arrivals = filterByLine(arrivals, lines)
+	}
+	// Sort by ETA
+	sort.Slice(arrivals, func(i, j int) bool {
+		return arrivals[i].TimeToStation < arrivals[j].TimeToStation
+	})
+	// Limit to desired number
+	if count > 0 {
+		arrivals = arrivals[:min(count, len(arrivals))]
+	}
+	return arrivals, nil
 }
