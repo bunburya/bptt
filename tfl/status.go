@@ -13,13 +13,31 @@ import (
 	"github.com/fatih/color"
 )
 
-var reallyBadStatuses = map[string]struct{}{
-	"Closed":          {},
-	"No Service":      {},
-	"Planned Closure": {},
-	"Severe Delays":   {},
-	"Not Running":     {},
-	"Suspended":       {},
+// The TfL API assigns numerical codes to each status severity, and it seems like you could *mostly* get by just
+// treating lower numbers as being more severe, but that may not necessarily work in all cases. So below is a list of
+// most severity descriptions observed at https://api.tfl.gov.uk/Line/Meta/Severity (excluding some that seem clearly
+// only intended for use with stations, rather than lines), ordered roughly in the order of severity.
+var severityOrder = []string{
+	"Closed",
+	"No Service",
+	"Not Running",
+	"Planned Closure",
+	"Suspended",
+	"Part Closure",
+	"Part Closed",
+	"Part Suspended",
+	"Severe Delays",
+	// Special Service is used differently on different lines and can mean anything from minor delays to suspended.
+	"Special Service",
+	"Reduced Service",
+	"Bus Service",
+	"Change of frequency",
+	"Diverted",
+	"Issues Reported",
+	"Minor Delays",
+	"Information",
+	"No Issues",
+	"Good Service",
 }
 
 func lineStatusUrl(lines []string) (string, error) {
@@ -30,20 +48,34 @@ func lineStatusUrl(lines []string) (string, error) {
 }
 
 type LineStatus struct {
-	Severity    uint8   `json:"statusseverity"`
-	Description string  `json:"statusSeveritydescription"`
+	Description string  `json:"statusSeverityDescription"`
 	Reason      *string `json:"reason,omitempty"`
+
+	// `severity` is the internal value that we assign to the status, based on the position of the description in the
+	// `severityOrder` slice. It is different to the numerical value assigned by the TfL API. `severityInit` describes
+	// whether we have already calculated and cached the result.
+	severity     int
+	severityInit bool
+}
+
+func (status LineStatus) Severity() int {
+	if !status.severityInit {
+		status.severity = slices.Index(severityOrder, status.Description)
+		status.severityInit = true
+	}
+	return status.severity
 }
 
 func (status LineStatus) severityColor() *color.Color {
 	// https://api.tfl.gov.uk/Line/Meta/Severity
 	var key string
-	if status.Description == "Good Service" {
-		key = "green"
-	} else if _, ok := reallyBadStatuses[status.Description]; ok {
+	s := status.Severity()
+	if s <= 8 {
 		key = "red"
-	} else {
+	} else if s <= 16 {
 		key = "yellow"
+	} else {
+		key = "green"
 	}
 	rgb, ok := safetyColors[key]
 	if ok {
@@ -65,7 +97,7 @@ func (line Line) mostSevereStatus() (*LineStatus, error) {
 		return nil, errors.New("no statuses found")
 	}
 	mostSevere := slices.MinFunc(line.Statuses, func(a, b *LineStatus) int {
-		return cmp.Compare(a.Severity, b.Severity)
+		return cmp.Compare(a.Severity(), b.Severity())
 	})
 	return mostSevere, nil
 }
