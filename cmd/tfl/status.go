@@ -1,0 +1,38 @@
+/*
+Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+*/
+package tfl
+
+import (
+	"log"
+	"ltt/output"
+	"ltt/tfl"
+
+	"github.com/spf13/cobra"
+)
+
+// statusCmd represents the status command
+var statusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "View the current service status of each of the given lines",
+	Args:  cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		lineIds := args
+		useColor, _ := cmd.Flags().GetBool("color")
+		lines, err := tfl.GetLineStatuses(lineIds)
+		if err != nil {
+			log.Fatal(err)
+		}
+		table := output.Table{}
+		for _, line := range lines {
+			row, err := line.ToRow(useColor)
+			if err != nil {
+				log.Fatal(err)
+			}
+			table.AddRow(row)
+		}
+		table.Print("\t", true, useColor)
+	},
+}
+
+func init() {}
