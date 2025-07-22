@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"ltt/output"
 	"net/http"
+	"ptt/output"
 	"slices"
 	"sort"
 	"time"
@@ -50,7 +50,7 @@ func GetStopArrivals(naptanId string, lines []string, count int) ([]Arrival, err
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "ltt")
+	req.Header.Set("User-Agent", "ptt")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err

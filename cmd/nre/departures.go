@@ -2,8 +2,8 @@ package nre
 
 import (
 	"log"
-	"ltt/nre"
 	"os"
+	"ptt/nre"
 
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ var departuresCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		apiToken, _ := cmd.Flags().GetString("token")
 		if apiToken == "" {
-			apiToken = os.Getenv("LTT_NRE_API_TOKEN")
+			apiToken = os.Getenv("PTT_NRE_API_TOKEN")
 		}
 		if apiToken == "" {
 			log.Fatal("National Rail API token is required")

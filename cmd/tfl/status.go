@@ -5,8 +5,8 @@ package tfl
 
 import (
 	"log"
-	"ltt/output"
-	"ltt/tfl"
+	"ptt/output"
+	"ptt/tfl"
 
 	"github.com/spf13/cobra"
 )

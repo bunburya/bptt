@@ -1,7 +1,7 @@
 package nre
 
 import (
-	"ltt/output"
+	"ptt/output"
 
 	nr "github.com/martinsirbe/go-national-rail-client/nationalrail"
 )

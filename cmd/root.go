@@ -1,20 +1,20 @@
 package cmd
 
 import (
-	"ltt/cmd/nre"
-	"ltt/cmd/tfl"
 	"os"
+	"ptt/cmd/nre"
+	"ptt/cmd/tfl"
 
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "ltt",
-	Short: "Access information about London public transport in the terminal.",
-	Long: `ltt is a command-line tool to easily access information about the current status of various London public
-transport services. For example, you can view the current service status of tube lines, the next arrivals at your local
-bus stop or departures from your local train station.`,
+	Use:   "ptt",
+	Short: "Access information about public transport in the terminal.",
+	Long: `ptt is a command-line tool to easily access information about the current status of various public transport
+services. Currently the focus is on services available in and around London, UK. For example, you can view the current
+service status of tube lines, the next arrivals at your local bus stop or departures from your local train station.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"ltt/output"
 	"net/http"
+	"ptt/output"
 	"slices"
 	"strings"
 
@@ -146,7 +146,7 @@ func GetLineStatuses(lineIds []string) ([]Line, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "ltt")
+	req.Header.Set("User-Agent", "ptt")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err

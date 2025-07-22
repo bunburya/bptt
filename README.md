@@ -1,6 +1,6 @@
-# `ltt`
+# `ptt`
 
-`ltt` (**L**ondon **T**ransport in the **T**erminal) is a simple command line application that displays information
+`ptt` (**P**ublic **T**ransport in the **T**erminal) is a simple command line application that displays information
 about various London public transport services.
 
 It is divided into sub-commands. The currently supported commands are:
@@ -16,7 +16,7 @@ statuses, the most severe one is reported.
 
 The general form is:
 ```
-ltt tfl status LINE_ID...
+ptt tfl status LINE_ID...
 ```
 
 In the above example, `LINE_ID` is the ID of the line in the form used by the TfL API. For example, the Northern line
@@ -25,7 +25,7 @@ any letters being lowercased. Multiple line IDs can be provided.
 
 For example:
 ```
-$ ltt tfl status bakerloo northern victoria 470 rb1 london-cable-car
+$ ptt tfl status bakerloo northern victoria 470 rb1 london-cable-car
 ```
 
 will produce something like:
@@ -51,7 +51,7 @@ https://techforum.tfl.gov.uk/t/how-to-find-departures-from-terminal-stations/72/
 
 Format:
 ```
-ltt tfl arrivals [--count N] [--lines LINE_ID,LINE_ID,[...]] STOP_ID
+ptt tfl arrivals [--count N] [--lines LINE_ID,LINE_ID,[...]] STOP_ID
 ```
 
 In the above example, `STOP_ID` is the [NaPTAN ID](https://beta-naptan.dft.gov.uk/) of the relevant stop. The optional
@@ -61,7 +61,7 @@ displayed.
 
 For example:
 ```
-$ ltt tfl arrivals --count 5 490000254D
+$ ptt tfl arrivals --count 5 490000254D
 ```
 
 will produce something like:
@@ -80,14 +80,14 @@ This command displays real time departure predictions for the given National Rai
 
 Format:
 ```
-ltt nre departures STATION_ID
+ptt nre departures STATION_ID
 ```
 
 In the above example, `STATION_ID` is the CRS code of the relevant station.
 
 For example:
 ```
-$ ltt nre departures --token [api_token_here] KGX
+$ ptt nre departures --token [api_token_here] KGX
 ```
 
 will produce something like:
