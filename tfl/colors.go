@@ -2,6 +2,12 @@ package tfl
 
 import "github.com/fatih/color"
 
+/*
+This file contains color mappings that are specific to TfL services.
+
+See https://content.tfl.gov.uk/tfl-colour-standard.pdf
+*/
+
 var lineColors = map[string]*color.Color{
 	"bakerloo":         color.BgRGB(178, 99, 0),
 	"central":          color.BgRGB(220, 36, 31),

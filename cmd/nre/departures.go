@@ -22,13 +22,14 @@ var departuresCmd = &cobra.Command{
 		if apiToken == "" {
 			log.Fatal("National Rail API token is required")
 		}
+		useColor, _ := cmd.Flags().GetBool("color")
 
 		depBoard, err := nre.GetDepartureBoard(args[0], apiToken)
 		if err != nil {
 			log.Fatal(err)
 		}
 		table := nre.DisplayDepartureBoard(depBoard)
-		table.Print("\t", true, false)
+		table.Print("\t", true, useColor)
 	},
 }
 
