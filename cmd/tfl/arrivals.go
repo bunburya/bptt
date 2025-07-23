@@ -35,7 +35,7 @@ var arrivalsCmd = &cobra.Command{
 }
 
 func init() {
-	arrivalsCmd.Flags().IntP("count", "n", 5, "max number of arrivals to display")
+	arrivalsCmd.Flags().IntP("count", "n", 0, "max number of arrivals to display")
 	arrivalsCmd.Flags().StringSlice("lines", nil,
 		"comma-delimited list of lines/routes to display (if not provided, all lines will be displayed)")
 }
