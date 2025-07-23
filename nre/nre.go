@@ -3,6 +3,7 @@ package nre
 import (
 	"fmt"
 	"ptt/output"
+	"slices"
 	"strings"
 
 	"github.com/fatih/color"
@@ -17,9 +18,29 @@ func GetDepartureBoard(crs string, apiKey string) (*nr.StationBoard, error) {
 	return client.GetDeparturesWithDetails(nr.CRSCode(crs))
 }
 
-func DisplayDepartureBoard(board *nr.StationBoard) output.Table {
+func filterServicesByCallPoint(services []*nr.TrainService, dests []string) []*nr.TrainService {
+	var filtered []*nr.TrainService
+	for _, service := range services {
+		if service == nil {
+			continue
+		}
+		for _, callPoint := range service.SubsequentCallingPoints {
+			if slices.Contains(dests, callPoint.CRS) {
+				filtered = append(filtered, service)
+				break
+			}
+		}
+	}
+	return filtered
+}
+
+func DisplayDepartureBoard(board *nr.StationBoard, callPoints []string) output.Table {
 	table := output.Table{}
-	for _, s := range board.TrainServices {
+	services := board.TrainServices
+	if len(callPoints) > 0 {
+		services = filterServicesByCallPoint(services, callPoints)
+	}
+	for _, s := range services {
 		// TODO: Double check that this is sufficient to determine if a service is delayed or cancelled.
 		// https://wiki.openraildata.com/index.php/GetDepBoardWithDetails suggests that delayed trains may not display
 		// an ETD.

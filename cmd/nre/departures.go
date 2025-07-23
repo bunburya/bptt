@@ -22,13 +22,14 @@ var departuresCmd = &cobra.Command{
 		if apiToken == "" {
 			log.Fatal("National Rail API token is required")
 		}
+		callPoints, _ := cmd.Flags().GetStringSlice("calls")
 		useColor, _ := cmd.Flags().GetBool("color")
 
 		depBoard, err := nre.GetDepartureBoard(args[0], apiToken)
 		if err != nil {
 			log.Fatal(err)
 		}
-		table := nre.DisplayDepartureBoard(depBoard)
+		table := nre.DisplayDepartureBoard(depBoard, callPoints)
 		table.Print("\t", true, useColor)
 	},
 }
@@ -44,4 +45,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// departuresCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	departuresCmd.Flags().StringSlice("calls", nil,
+		"comma-separated list of CRS codes "+
+			"(only display departures for services that subsequently call at one of the specified stations)")
 }
