@@ -34,11 +34,20 @@ func filterServicesByCallPoint(services []*nr.TrainService, dests []string) []*n
 	return filtered
 }
 
-func DisplayDepartureBoard(board *nr.StationBoard, callPoints []string, showPlatform bool) output.Table {
+func DisplayDepartureBoard(
+	board *nr.StationBoard,
+	callPoints []string,
+	showPlatform bool,
+	count int,
+) output.Table {
+
 	table := output.Table{}
 	services := board.TrainServices
 	if len(callPoints) > 0 {
 		services = filterServicesByCallPoint(services, callPoints)
+	}
+	if count > 0 {
+		services = services[:min(count, len(services))]
 	}
 	for _, s := range services {
 		// TODO: Double check that this is sufficient to determine if a service is delayed or cancelled.
