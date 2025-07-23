@@ -34,7 +34,7 @@ func filterServicesByCallPoint(services []*nr.TrainService, dests []string) []*n
 	return filtered
 }
 
-func DisplayDepartureBoard(board *nr.StationBoard, callPoints []string) output.Table {
+func DisplayDepartureBoard(board *nr.StationBoard, callPoints []string, showPlatform bool) output.Table {
 	table := output.Table{}
 	services := board.TrainServices
 	if len(callPoints) > 0 {
@@ -58,7 +58,7 @@ func DisplayDepartureBoard(board *nr.StationBoard, callPoints []string) output.T
 			etdColor = etdColor.Add(color.Bold)
 		}
 		var platform string
-		if s.Platform == nil {
+		if (!showPlatform) || (s.Platform == nil) {
 			platform = ""
 		} else {
 			platform = fmt.Sprintf("Platform %s", *s.Platform)
