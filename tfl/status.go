@@ -116,10 +116,10 @@ func (line Line) lineColor() *color.Color {
 	}
 }
 
-func (line Line) ToRow(withColor bool) (output.FormattedRow, error) {
-	lineCol := output.FormattedText{}
-	statusCol := output.FormattedText{}
-	row := output.FormattedRow{}
+func (line Line) ToRow(withColor bool) (output.Row, error) {
+	lineCell := output.Cell{}
+	statusCell := output.Cell{}
+	row := output.Row{}
 	mostSevere, err := line.mostSevereStatus()
 	if err != nil {
 		return row, err
@@ -127,13 +127,13 @@ func (line Line) ToRow(withColor bool) (output.FormattedRow, error) {
 	lineColor := line.lineColor()
 	severityColor := mostSevere.severityColor()
 	if lineColor != nil && withColor {
-		lineCol.Add("    ", lineColor)
-		lineCol.Add(" ", nil)
+		lineCell.AddText("    ", lineColor)
+		lineCell.AddText(" ", nil)
 	}
-	lineCol.Add(line.Name, nil)
-	statusCol.Add(mostSevere.Description, severityColor)
-	row.AddCol(lineCol)
-	row.AddCol(statusCol)
+	lineCell.AddText(line.Name, nil)
+	statusCell.AddText(mostSevere.Description, severityColor)
+	row.AddCell(lineCell)
+	row.AddCell(statusCell)
 	return row, nil
 }
 

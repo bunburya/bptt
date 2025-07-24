@@ -72,11 +72,11 @@ func DisplayDepartureBoard(
 		} else {
 			platform = fmt.Sprintf("Platform %s", *s.Platform)
 		}
-		table.AddRow(output.NewFormattedRow(
-			output.NewFormattedText(s.Destination.Name, nil),
-			output.NewFormattedText(platform, nil),
-			output.NewFormattedText(s.STD, nil),
-			output.NewFormattedText(s.ETD, etdColor),
+		table.AddRow(output.NewRow(
+			output.NewCell(s.Destination.Name, nil),
+			output.NewCell(platform, nil),
+			output.NewCell(s.STD, nil),
+			output.NewCell(s.ETD, etdColor),
 		))
 	}
 	return table

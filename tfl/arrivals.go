@@ -23,12 +23,12 @@ type Arrival struct {
 	TimeToStation int    `json:"timeToStation"`
 }
 
-func (a Arrival) ToRow() output.FormattedRow {
+func (a Arrival) ToRow() output.Row {
 	duration := time.Duration(a.TimeToStation) * time.Second
-	lineCol := output.NewFormattedText(a.LineName, nil)
-	dstCol := output.NewFormattedText(a.Destination, nil)
-	timeCol := output.NewFormattedText(fmt.Sprintf("%s", duration), nil)
-	return output.NewFormattedRow(lineCol, dstCol, timeCol)
+	lineCol := output.NewCell(a.LineName, nil)
+	dstCol := output.NewCell(a.Destination, nil)
+	timeCol := output.NewCell(fmt.Sprintf("%s", duration), nil)
+	return output.NewRow(lineCol, dstCol, timeCol)
 }
 
 func filterByLine(arrivals []Arrival, lines []string) []Arrival {
