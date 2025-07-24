@@ -1,6 +1,8 @@
 package tfl
 
 import (
+	"ptt/cmd/tfl/search"
+
 	"github.com/spf13/cobra"
 )
 
@@ -13,4 +15,5 @@ var TflCmd = &cobra.Command{
 func init() {
 	TflCmd.AddCommand(statusCmd)
 	TflCmd.AddCommand(arrivalsCmd)
+	TflCmd.AddCommand(search.SearchCmd)
 }
