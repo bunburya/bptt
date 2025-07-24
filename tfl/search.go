@@ -25,15 +25,11 @@ func SearchStopPoints(query string) ([]StopPoint, error) {
 		return nil, err
 	}
 	req.Header.Set("User-Agent", "ptt")
-	//println(req.URL.String())
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
-	//body, err := io.ReadAll(resp.Body)
-	//println(string(body))
 
 	var searchResult map[string]json.RawMessage
 	if err := json.NewDecoder(resp.Body).Decode(&searchResult); err != nil {
