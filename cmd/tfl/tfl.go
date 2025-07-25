@@ -16,4 +16,5 @@ func init() {
 	TflCmd.AddCommand(statusCmd)
 	TflCmd.AddCommand(arrivalsCmd)
 	TflCmd.AddCommand(search.SearchCmd)
+	TflCmd.PersistentFlags().StringP("api-key", "k", "", "TfL API key")
 }

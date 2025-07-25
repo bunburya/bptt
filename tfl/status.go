@@ -2,10 +2,8 @@ package tfl
 
 import (
 	"cmp"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"ptt/output"
 	"slices"
 	"strings"
@@ -40,11 +38,11 @@ var severityOrder = []string{
 	"Good Service",
 }
 
-func lineStatusUrl(lines []string) (string, error) {
+func lineStatusUrl(lines []string, apiKey string) (string, error) {
 	if len(lines) == 0 {
 		return "", errors.New("no lines provided")
 	}
-	return fmt.Sprintf("%s/Line/%s/Status", BaseUrl, strings.Join(lines, ",")), nil
+	return addApiKey(fmt.Sprintf("%s/Line/%s/Status", BaseUrl, strings.Join(lines, ",")), apiKey), nil
 }
 
 type LineStatus struct {
@@ -137,23 +135,13 @@ func (line Line) ToRow(withColor bool) (output.Row, error) {
 	return row, nil
 }
 
-func GetLineStatuses(lineIds []string) ([]Line, error) {
-	url, err := lineStatusUrl(lineIds)
+func GetLineStatuses(lineIds []string, apiKey string) ([]Line, error) {
+	url, err := lineStatusUrl(lineIds, apiKey)
 	if err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequest("GET", url, nil)
+	lines, err := request[[]Line](url, apiKey)
 	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("User-Agent", "ptt")
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	var lines []Line
-	if err := json.NewDecoder(resp.Body).Decode(&lines); err != nil {
 		return nil, err
 	}
 	return lines, nil

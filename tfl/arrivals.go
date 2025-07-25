@@ -1,18 +1,16 @@
 package tfl
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"ptt/output"
 	"slices"
 	"sort"
 	"time"
 )
 
-func arrivalsUrl(naptanId string) string {
-	return fmt.Sprintf("%s/StopPoint/%s/Arrivals", BaseUrl, naptanId)
+func arrivalsUrl(naptanId string, apiKey string) string {
+	return addApiKey(fmt.Sprintf("%s/StopPoint/%s/Arrivals", BaseUrl, naptanId), apiKey)
 }
 
 type Arrival struct {
@@ -41,25 +39,16 @@ func filterByLine(arrivals []Arrival, lines []string) []Arrival {
 	return filtered
 }
 
-func GetStopArrivals(naptanId string, lines []string, count int) ([]Arrival, error) {
+func GetStopArrivals(naptanId string, lines []string, count int, apiKey string) ([]Arrival, error) {
 	if len(naptanId) == 0 {
 		return nil, errors.New("no naptanId provided")
 	}
-	url := arrivalsUrl(naptanId)
-	req, err := http.NewRequest("GET", url, nil)
+	url := arrivalsUrl(naptanId, apiKey)
+	arrivals, err := request[[]Arrival](url, apiKey)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "ptt")
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	var arrivals []Arrival
-	if err := json.NewDecoder(resp.Body).Decode(&arrivals); err != nil {
-		return nil, err
-	}
+
 	// Filter to relevant lines if they were provided
 	if len(lines) > 0 {
 		arrivals = filterByLine(arrivals, lines)

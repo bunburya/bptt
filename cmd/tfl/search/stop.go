@@ -9,12 +9,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var SearchStopCmd = &cobra.Command{
+var searchStopCmd = &cobra.Command{
 	Use:  "stop",
-	Args: cobra.ArbitraryArgs,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		searchStr := strings.Join(args, " ")
-		stopPoints, err := tfl.SearchStopPoints(searchStr)
+		modes, _ := cmd.Flags().GetStringSlice("modes")
+		apiKey, _ := cmd.Flags().GetString("api-key")
+		stopPoints, err := tfl.SearchStopPoints(searchStr, modes, apiKey)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -24,4 +26,9 @@ var SearchStopCmd = &cobra.Command{
 		}
 		table.Print("\t", true, false)
 	},
+}
+
+func init() {
+	searchStopCmd.Flags().StringSliceP("modes", "m", nil,
+		"search only for stops serving the given modes")
 }

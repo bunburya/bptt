@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package tfl
 
 import (
@@ -19,7 +16,8 @@ var statusCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		lineIds := args
 		useColor, _ := cmd.Flags().GetBool("color")
-		lines, err := tfl.GetLineStatuses(lineIds)
+		apiKey, _ := cmd.Flags().GetString("api-key")
+		lines, err := tfl.GetLineStatuses(lineIds, apiKey)
 		if err != nil {
 			log.Fatal(err)
 		}

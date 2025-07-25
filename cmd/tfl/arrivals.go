@@ -20,7 +20,8 @@ var arrivalsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		lines, _ := cmd.Flags().GetStringSlice("lines")
 		count, _ := cmd.Flags().GetInt("count")
-		arrivals, err := tfl.GetStopArrivals(args[0], lines, count)
+		apiKey, _ := cmd.Flags().GetString("api-key")
+		arrivals, err := tfl.GetStopArrivals(args[0], lines, count, apiKey)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -7,5 +7,5 @@ var SearchCmd = &cobra.Command{
 }
 
 func init() {
-	SearchCmd.AddCommand(SearchStopCmd)
+	SearchCmd.AddCommand(searchStopCmd)
 }
