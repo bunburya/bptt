@@ -38,11 +38,11 @@ var severityOrder = []string{
 	"Good Service",
 }
 
-func lineStatusUrl(lines []string, apiKey string) (string, error) {
+func lineStatusUrl(lines []string) (string, error) {
 	if len(lines) == 0 {
 		return "", errors.New("no lines provided")
 	}
-	return addApiKey(fmt.Sprintf("%s/Line/%s/Status", BaseUrl, strings.Join(lines, ",")), apiKey), nil
+	return fmt.Sprintf("%s/Line/%s/Status", BaseUrl, strings.Join(lines, ",")), nil
 }
 
 type LineStatus struct {
@@ -56,7 +56,7 @@ type LineStatus struct {
 	severityInit bool
 }
 
-func (status LineStatus) Severity() int {
+func (status *LineStatus) Severity() int {
 	if !status.severityInit {
 		status.severity = slices.Index(severityOrder, status.Description)
 		status.severityInit = true
@@ -64,7 +64,7 @@ func (status LineStatus) Severity() int {
 	return status.severity
 }
 
-func (status LineStatus) severityColor() *color.Color {
+func (status *LineStatus) severityColor() *color.Color {
 	// https://api.tfl.gov.uk/Line/Meta/Severity
 	var key string
 	s := status.Severity()
@@ -83,14 +83,7 @@ func (status LineStatus) severityColor() *color.Color {
 	}
 }
 
-type Line struct {
-	Id       string        `json:"id"`
-	Name     string        `json:"name"`
-	Mode     string        `json:"modeName"`
-	Statuses []*LineStatus `json:"lineStatuses"`
-}
-
-func (line Line) mostSevereStatus() (*LineStatus, error) {
+func (line *Line) mostSevereStatus() (*LineStatus, error) {
 	if len(line.Statuses) == 0 {
 		return nil, errors.New("no statuses found")
 	}
@@ -100,7 +93,7 @@ func (line Line) mostSevereStatus() (*LineStatus, error) {
 	return mostSevere, nil
 }
 
-func (line Line) lineColor() *color.Color {
+func (line *Line) lineColor() *color.Color {
 	var lineColor *color.Color
 	var ok bool
 	lineColor, ok = lineColors[line.Id]
@@ -114,7 +107,7 @@ func (line Line) lineColor() *color.Color {
 	}
 }
 
-func (line Line) ToRow(withColor bool) (output.Row, error) {
+func (line *Line) ToRowWithStatus(withColor bool) (output.Row, error) {
 	lineCell := output.Cell{}
 	statusCell := output.Cell{}
 	row := output.Row{}
@@ -136,7 +129,7 @@ func (line Line) ToRow(withColor bool) (output.Row, error) {
 }
 
 func GetLineStatuses(lineIds []string, apiKey string) ([]Line, error) {
-	url, err := lineStatusUrl(lineIds, apiKey)
+	url, err := lineStatusUrl(lineIds)
 	if err != nil {
 		return nil, err
 	}

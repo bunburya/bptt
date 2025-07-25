@@ -23,7 +23,7 @@ var statusCmd = &cobra.Command{
 		}
 		table := output.Table{}
 		for _, line := range lines {
-			row, err := line.ToRow(useColor)
+			row, err := line.ToRowWithStatus(useColor)
 			if err != nil {
 				log.Fatal(err)
 			}

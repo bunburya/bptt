@@ -10,8 +10,9 @@ import (
 )
 
 var searchStopCmd = &cobra.Command{
-	Use:  "stop",
-	Args: cobra.MinimumNArgs(1),
+	Use:   "stop",
+	Short: "search for stop points with the given string in their name",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		searchStr := strings.Join(args, " ")
 		modes, _ := cmd.Flags().GetStringSlice("modes")

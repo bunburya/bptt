@@ -8,15 +8,9 @@ import (
 
 const BaseUrl = "https://api.tfl.gov.uk"
 
-// addApiKey adds the given Tfl API key to a request URL, if an API key is present. Otherwise, it returns the given
-// URL unchanged. Assumes `url` is a valid TfL request URL.
-func addApiKey(url string, apiKey string) string {
-	if len(apiKey) > 0 {
-		url += "?app_key=" + apiKey
-	}
-	return url
-}
-
+// request makes a single request of the TfL API. `url` must be a valid API endpoint and `apiKey` must either be an
+// empty string or a valid API key. The type parameter specifies the type of object that will be returned. It must be
+// capable of being unmarshalled from the JSON response.
 func request[T any](url string, apiKey string) (T, error) {
 	var t T
 	req, err := http.NewRequest("GET", url, nil)
@@ -39,4 +33,12 @@ func request[T any](url string, apiKey string) (T, error) {
 		return t, err
 	}
 	return t, nil
+}
+
+// Line represents a single TfL line/route. It is used by both the `status` and `search line` commands.
+type Line struct {
+	Id       string        `json:"id"`
+	Name     string        `json:"name"`
+	Mode     string        `json:"modeName"`
+	Statuses []*LineStatus `json:"lineStatuses"`
 }

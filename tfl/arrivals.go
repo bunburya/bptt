@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-func arrivalsUrl(naptanId string, apiKey string) string {
-	return addApiKey(fmt.Sprintf("%s/StopPoint/%s/Arrivals", BaseUrl, naptanId), apiKey)
+func arrivalsUrl(naptanId string) string {
+	return fmt.Sprintf("%s/StopPoint/%s/Arrivals", BaseUrl, naptanId)
 }
 
 type Arrival struct {
@@ -43,7 +43,7 @@ func GetStopArrivals(naptanId string, lines []string, count int, apiKey string) 
 	if len(naptanId) == 0 {
 		return nil, errors.New("no naptanId provided")
 	}
-	url := arrivalsUrl(naptanId, apiKey)
+	url := arrivalsUrl(naptanId)
 	arrivals, err := request[[]Arrival](url, apiKey)
 	if err != nil {
 		return nil, err

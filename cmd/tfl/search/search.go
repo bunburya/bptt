@@ -8,4 +8,6 @@ var SearchCmd = &cobra.Command{
 
 func init() {
 	SearchCmd.AddCommand(searchStopCmd)
+	SearchCmd.AddCommand(searchModeCmd)
+	SearchCmd.AddCommand(searchLineCmd)
 }
