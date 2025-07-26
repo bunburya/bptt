@@ -1,7 +1,6 @@
 package search
 
 import (
-	"log"
 	"ptt/output"
 	"ptt/tfl"
 	"strings"
@@ -13,19 +12,20 @@ var searchStopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "search for stop points with the given string in their name",
 	Args:  cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		searchStr := strings.Join(args, " ")
 		modes, _ := cmd.Flags().GetStringSlice("modes")
 		apiKey, _ := cmd.Flags().GetString("api-key")
 		stopPoints, err := tfl.SearchStopPoints(searchStr, modes, apiKey)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		table := output.Table{}
 		for _, stopPoint := range stopPoints {
 			table.AddRow(stopPoint.ToRow())
 		}
 		table.Print("\t", true, false)
+		return nil
 	},
 }
 

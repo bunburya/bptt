@@ -1,7 +1,7 @@
 package nre
 
 import (
-	"log"
+	"errors"
 	"os"
 	"ptt/nre"
 
@@ -14,13 +14,13 @@ var departuresCmd = &cobra.Command{
 	Short: "View departures board for the given station",
 	Long:  `View departures board for the given station. The station should be identified by its CRS code.`,
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		apiToken, _ := cmd.Flags().GetString("token")
 		if apiToken == "" {
 			apiToken = os.Getenv("PTT_NRE_API_TOKEN")
 		}
 		if apiToken == "" {
-			log.Fatal("National Rail API token is required")
+			return errors.New("API token is required")
 		}
 		callPoints, _ := cmd.Flags().GetStringSlice("calls")
 		showPlatform, _ := cmd.Flags().GetBool("platform")
@@ -28,24 +28,15 @@ var departuresCmd = &cobra.Command{
 		count, _ := cmd.Flags().GetInt("count")
 		depBoard, err := nre.GetDepartureBoard(args[0], apiToken)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		table := nre.DisplayDepartureBoard(depBoard, callPoints, showPlatform, count)
 		table.Print("\t", true, useColor)
+		return nil
 	},
 }
 
 func init() {
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// departuresCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// departuresCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	departuresCmd.Flags().StringSlice("calls", nil,
 		"comma-separated list of CRS codes "+
 			"(only display departures for services that subsequently call at one of the specified stations)")

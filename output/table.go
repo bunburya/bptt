@@ -78,17 +78,16 @@ func NewRow(cells ...Cell) Row {
 }
 
 type Table struct {
-	rows []Row
-}
-
-func (t *Table) NewRow() *Row {
-	r := Row{}
-	t.rows = append(t.rows, r)
-	return &t.rows[len(t.rows)-1]
+	rows   []Row
+	footer string
 }
 
 func (t *Table) AddRow(row Row) {
 	t.rows = append(t.rows, row)
+}
+
+func (t *Table) SetFooter(footer string) {
+	t.footer = footer
 }
 
 func (t *Table) Print(sep string, padded bool, withColor bool) {
@@ -122,5 +121,8 @@ func (t *Table) Print(sep string, padded bool, withColor bool) {
 				fmt.Println()
 			}
 		}
+	}
+	if t.footer != "" {
+		fmt.Println(t.footer)
 	}
 }

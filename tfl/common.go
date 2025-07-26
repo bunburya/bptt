@@ -8,6 +8,13 @@ import (
 
 const BaseUrl = "https://api.tfl.gov.uk"
 
+type ApiError struct {
+	ExceptionType  string `json:"exceptionType"`
+	HttpStatusCode int    `json:"httpStatusCode"`
+	RelativeUri    string `json:"relativeUri"`
+	Message        string `json:"message"`
+}
+
 // request makes a single request of the TfL API. `url` must be a valid API endpoint and `apiKey` must either be an
 // empty string or a valid API key. The type parameter specifies the type of object that will be returned. It must be
 // capable of being unmarshalled from the JSON response.
@@ -27,7 +34,11 @@ func request[T any](url string, apiKey string) (T, error) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return t, errors.New(resp.Status)
+		var apiErr ApiError
+		if err := json.NewDecoder(resp.Body).Decode(&apiErr); err != nil {
+			return t, err
+		}
+		return t, errors.New(apiErr.Message)
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&t); err != nil {
 		return t, err

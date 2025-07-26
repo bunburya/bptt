@@ -4,7 +4,6 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package tfl
 
 import (
-	"log"
 	"ptt/output"
 	"ptt/tfl"
 
@@ -17,13 +16,13 @@ var arrivalsCmd = &cobra.Command{
 	Short: "Display next arrivals at the given stop",
 	Long:  "Display next arrivals at the given stop. The stop must be identified by its NaPTAN ID.",
 	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		lines, _ := cmd.Flags().GetStringSlice("lines")
 		count, _ := cmd.Flags().GetInt("count")
 		apiKey, _ := cmd.Flags().GetString("api-key")
 		arrivals, err := tfl.GetStopArrivals(args[0], lines, count, apiKey)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 
 		table := output.Table{}
@@ -32,6 +31,7 @@ var arrivalsCmd = &cobra.Command{
 			table.AddRow(row)
 		}
 		table.Print("\t", true, false)
+		return nil
 	},
 }
 

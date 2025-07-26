@@ -1,7 +1,6 @@
 package search
 
 import (
-	"log"
 	"ptt/output"
 	"ptt/tfl"
 
@@ -12,11 +11,11 @@ var searchLineCmd = &cobra.Command{
 	Use:   "line",
 	Short: "search for all lines of the given modes",
 	Args:  cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		apiKey, _ := cmd.Flags().GetString("api-key")
 		results, err := tfl.SearchLines(args, apiKey)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		table := output.Table{}
 		for _, mode := range results {
@@ -25,5 +24,6 @@ var searchLineCmd = &cobra.Command{
 			}
 		}
 		table.Print("\t", true, false)
+		return nil
 	},
 }
