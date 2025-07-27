@@ -1,7 +1,7 @@
 package search
 
 import (
-	"fmt"
+	"ptt/output"
 	"ptt/tfl"
 
 	"github.com/spf13/cobra"
@@ -13,13 +13,12 @@ var searchModeCmd = &cobra.Command{
 	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		apiKey, _ := cmd.Flags().GetString("api-key")
-		modes, err := tfl.SearchModes(apiKey)
+		opt := output.OptionsFromFlags(cmd.Flags())
+		table, err := tfl.ModesTable(apiKey, opt)
 		if err != nil {
 			return err
 		}
-		for _, m := range modes {
-			fmt.Println(m)
-		}
+		table.Print("\t", true, opt.Color)
 		return nil
 	},
 }

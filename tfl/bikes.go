@@ -10,7 +10,7 @@ import (
 	"github.com/fatih/color"
 )
 
-const bikePointUrl = BaseUrl + "/bikePoint"
+const bikePointUrl = BaseUrl + "/BikePoint"
 
 func singleBikePointUrl(id string) string {
 	return fmt.Sprintf("%s/%s", bikePointUrl, id)
@@ -22,7 +22,7 @@ type tmpBikePoint struct {
 	Properties []map[string]string `json:"additionalProperties"`
 }
 
-type bikePoint struct {
+type bikePointWithStatus struct {
 	Id            string `json:"id"`
 	Name          string `json:"commonName"`
 	Ebikes        int
@@ -30,7 +30,7 @@ type bikePoint struct {
 	EmptyDocks    int
 }
 
-func (b *bikePoint) UnmarshalJSON(data []byte) error {
+func (b *bikePointWithStatus) UnmarshalJSON(data []byte) error {
 	var tmp tmpBikePoint
 	err := json.Unmarshal(data, &tmp)
 	if err != nil {
@@ -60,7 +60,7 @@ func (b *bikePoint) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (b *bikePoint) toRow() output.Row {
+func (b *bikePointWithStatus) toRow() output.Row {
 	return output.NewRow(
 		output.NewCell(b.Name, nil),
 		output.NewCell(strconv.Itoa(b.StandardBikes), nil),
@@ -69,13 +69,13 @@ func (b *bikePoint) toRow() output.Row {
 	)
 }
 
-func getSingleBikePoint(id string, apiKey string) (bikePoint, error) {
+func getSingleBikePoint(id string, apiKey string) (bikePointWithStatus, error) {
 	url := singleBikePointUrl(id)
-	return request[bikePoint](url, apiKey)
+	return request[bikePointWithStatus](url, apiKey)
 }
 
-func filterByBikePointId(bp []bikePoint, ids []string) []bikePoint {
-	var filtered []bikePoint
+func filterByBikePointId(bp []bikePointWithStatus, ids []string) []bikePointWithStatus {
+	var filtered []bikePointWithStatus
 	for _, b := range bp {
 		if slices.Contains(ids, b.Id) {
 			filtered = append(filtered, b)
@@ -84,11 +84,11 @@ func filterByBikePointId(bp []bikePoint, ids []string) []bikePoint {
 	return filtered
 }
 
-func getMultiBikePoints(ids []string, apiKey string) ([]bikePoint, error) {
+func getMultiBikePoints(ids []string, apiKey string) ([]bikePointWithStatus, error) {
 	if len(ids) == 0 {
 		return nil, nil
 	}
-	bps, err := request[[]bikePoint](bikePointUrl, apiKey)
+	bps, err := request[[]bikePointWithStatus](bikePointUrl, apiKey)
 	if err != nil {
 		return nil, err
 	}
@@ -96,13 +96,13 @@ func getMultiBikePoints(ids []string, apiKey string) ([]bikePoint, error) {
 	return bps, nil
 }
 
-func getBikePoints(bpIds []string, apiKey string) ([]bikePoint, error) {
+func getBikePoints(bpIds []string, apiKey string) ([]bikePointWithStatus, error) {
 	if len(bpIds) == 1 {
 		bp, err := getSingleBikePoint(bpIds[0], apiKey)
 		if err != nil {
 			return nil, err
 		}
-		return []bikePoint{bp}, nil
+		return []bikePointWithStatus{bp}, nil
 	} else {
 		return getMultiBikePoints(bpIds, apiKey)
 	}

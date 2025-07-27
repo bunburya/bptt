@@ -12,7 +12,7 @@ import (
 )
 
 func arrivalsUrl(naptanId string) string {
-	return fmt.Sprintf("%s/StopPoint/%s/Arrivals", BaseUrl, naptanId)
+	return fmt.Sprintf("%s/stopPoint/%s/Arrivals", BaseUrl, naptanId)
 }
 
 type arrival struct {

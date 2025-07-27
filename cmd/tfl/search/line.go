@@ -13,17 +13,12 @@ var searchLineCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		apiKey, _ := cmd.Flags().GetString("api-key")
-		results, err := tfl.SearchLines(args, apiKey)
+		opt := output.OptionsFromFlags(cmd.Flags())
+		table, err := tfl.LinesTable(args, apiKey, opt)
 		if err != nil {
 			return err
 		}
-		table := output.Table{}
-		for _, mode := range results {
-			for _, line := range mode {
-				table.AddRow(line.ToRow())
-			}
-		}
-		table.Print("\t", true, false)
+		table.Print("\t", true, opt.Color)
 		return nil
 	},
 }
