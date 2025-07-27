@@ -3,8 +3,10 @@ package output
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
+	"github.com/spf13/pflag"
 )
 
 type span struct {
@@ -90,6 +92,11 @@ func (t *Table) SetFooter(footer string) {
 	t.footer = footer
 }
 
+func (t *Table) Timestamp() {
+	timestamp := time.Now().Format(time.RFC822)
+	t.SetFooter(fmt.Sprintf("Last updated: %s", timestamp))
+}
+
 func (t *Table) Print(sep string, padded bool, withColor bool) {
 	maxRowLen := 0
 	for _, row := range t.rows {
@@ -125,4 +132,17 @@ func (t *Table) Print(sep string, padded bool, withColor bool) {
 	if t.footer != "" {
 		fmt.Println(t.footer)
 	}
+}
+
+type Options struct {
+	Color     bool
+	Header    bool
+	Timestamp bool
+}
+
+func OptionsFromFlags(flags *pflag.FlagSet) Options {
+	withColor, _ := flags.GetBool("color")
+	withHeader, _ := flags.GetBool("header")
+	withTimestamp, _ := flags.GetBool("timestamp")
+	return Options{withColor, withHeader, withTimestamp}
 }

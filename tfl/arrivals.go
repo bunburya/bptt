@@ -7,13 +7,15 @@ import (
 	"slices"
 	"sort"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 func arrivalsUrl(naptanId string) string {
 	return fmt.Sprintf("%s/StopPoint/%s/Arrivals", BaseUrl, naptanId)
 }
 
-type Arrival struct {
+type arrival struct {
 	StationName   string `json:"stationName"`
 	LineId        string `json:"lineId"`
 	LineName      string `json:"lineName"`
@@ -21,7 +23,7 @@ type Arrival struct {
 	TimeToStation int    `json:"timeToStation"`
 }
 
-func (a Arrival) ToRow() output.Row {
+func (a arrival) toRow() output.Row {
 	duration := time.Duration(a.TimeToStation) * time.Second
 	lineCol := output.NewCell(a.LineName, nil)
 	dstCol := output.NewCell(a.Destination, nil)
@@ -29,8 +31,8 @@ func (a Arrival) ToRow() output.Row {
 	return output.NewRow(lineCol, dstCol, timeCol)
 }
 
-func filterByLine(arrivals []Arrival, lines []string) []Arrival {
-	var filtered []Arrival
+func filterByLine(arrivals []arrival, lines []string) []arrival {
+	var filtered []arrival
 	for _, a := range arrivals {
 		if slices.Contains(lines, a.LineId) {
 			filtered = append(filtered, a)
@@ -39,12 +41,12 @@ func filterByLine(arrivals []Arrival, lines []string) []Arrival {
 	return filtered
 }
 
-func GetStopArrivals(naptanId string, lines []string, count int, apiKey string) ([]Arrival, error) {
+func getStopArrivals(naptanId string, lines []string, count int, apiKey string) ([]arrival, error) {
 	if len(naptanId) == 0 {
 		return nil, errors.New("no naptanId provided")
 	}
 	url := arrivalsUrl(naptanId)
-	arrivals, err := request[[]Arrival](url, apiKey)
+	arrivals, err := request[[]arrival](url, apiKey)
 	if err != nil {
 		return nil, err
 	}
@@ -62,4 +64,32 @@ func GetStopArrivals(naptanId string, lines []string, count int, apiKey string) 
 		arrivals = arrivals[:min(count, len(arrivals))]
 	}
 	return arrivals, nil
+}
+
+func ArrivalsTable(
+	naptanId string,
+	lines []string,
+	count int,
+	apiKey string,
+	options output.Options,
+) (output.Table, error) {
+	table := output.Table{}
+	arrivals, err := getStopArrivals(naptanId, lines, count, apiKey)
+	if err != nil {
+		return table, err
+	}
+	if options.Header {
+		table.AddRow(output.NewRow(
+			output.NewCell("Line", color.New(color.Bold)),
+			output.NewCell("Destination", color.New(color.Bold)),
+			output.NewCell("ETA", color.New(color.Bold)),
+		))
+	}
+	for _, arr := range arrivals {
+		table.AddRow(arr.toRow())
+	}
+	if options.Timestamp {
+		table.Timestamp()
+	}
+	return table, nil
 }

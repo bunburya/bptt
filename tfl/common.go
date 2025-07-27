@@ -45,11 +45,3 @@ func request[T any](url string, apiKey string) (T, error) {
 	}
 	return t, nil
 }
-
-// Line represents a single TfL line/route. It is used by both the `status` and `search line` commands.
-type Line struct {
-	Id       string        `json:"id"`
-	Name     string        `json:"name"`
-	Mode     string        `json:"modeName"`
-	Statuses []*LineStatus `json:"lineStatuses"`
-}

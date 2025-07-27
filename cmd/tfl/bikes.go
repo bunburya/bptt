@@ -7,22 +7,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// statusCmd represents the status command
-var statusCmd = &cobra.Command{
-	Use:   "status",
-	Short: "View the current service status of each of the given lines",
+var bikesCmd = &cobra.Command{
+	Use:   "bikes",
+	Short: "display status (number of available bikes and empty slots) at the given bike stations",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		lineIds := args
 		apiKey, _ := cmd.Flags().GetString("api-key")
 		opt := output.OptionsFromFlags(cmd.Flags())
-		table, err := tfl.LineStatusTable(lineIds, apiKey, opt)
+		t, err := tfl.BikesTable(args, apiKey, opt)
 		if err != nil {
 			return err
 		}
-		table.Print("\t", true, opt.Color)
+		t.Print("\t", true, opt.Color)
 		return nil
 	},
 }
-
-func init() {}

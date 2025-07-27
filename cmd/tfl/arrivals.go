@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package tfl
 
 import (
@@ -20,17 +17,12 @@ var arrivalsCmd = &cobra.Command{
 		lines, _ := cmd.Flags().GetStringSlice("lines")
 		count, _ := cmd.Flags().GetInt("count")
 		apiKey, _ := cmd.Flags().GetString("api-key")
-		arrivals, err := tfl.GetStopArrivals(args[0], lines, count, apiKey)
+		opt := output.OptionsFromFlags(cmd.Flags())
+		table, err := tfl.ArrivalsTable(args[0], lines, count, apiKey, opt)
 		if err != nil {
 			return err
 		}
-
-		table := output.Table{}
-		for _, arr := range arrivals {
-			row := arr.ToRow()
-			table.AddRow(row)
-		}
-		table.Print("\t", true, false)
+		table.Print("\t", true, opt.Color)
 		return nil
 	},
 }

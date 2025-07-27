@@ -45,7 +45,7 @@ func lineStatusUrl(lines []string) (string, error) {
 	return fmt.Sprintf("%s/Line/%s/Status", BaseUrl, strings.Join(lines, ",")), nil
 }
 
-type LineStatus struct {
+type lineStatus struct {
 	Description string  `json:"statusSeverityDescription"`
 	Reason      *string `json:"reason,omitempty"`
 
@@ -56,7 +56,7 @@ type LineStatus struct {
 	severityInit bool
 }
 
-func (status *LineStatus) Severity() int {
+func (status *lineStatus) Severity() int {
 	if !status.severityInit {
 		status.severity = slices.Index(severityOrder, status.Description)
 		status.severityInit = true
@@ -64,7 +64,7 @@ func (status *LineStatus) Severity() int {
 	return status.severity
 }
 
-func (status *LineStatus) severityColor() *color.Color {
+func (status *lineStatus) severityColor() *color.Color {
 	// https://api.tfl.gov.uk/Line/Meta/Severity
 	var key string
 	s := status.Severity()
@@ -83,17 +83,25 @@ func (status *LineStatus) severityColor() *color.Color {
 	}
 }
 
-func (line *Line) mostSevereStatus() (*LineStatus, error) {
+// lineWithStatuses represents a single TfL line/route, with the currently applicable statuses.
+type lineWithStatuses struct {
+	Id       string        `json:"id"`
+	Name     string        `json:"name"`
+	Mode     string        `json:"modeName"`
+	Statuses []*lineStatus `json:"lineStatuses"`
+}
+
+func (line *lineWithStatuses) mostSevereStatus() (*lineStatus, error) {
 	if len(line.Statuses) == 0 {
 		return nil, errors.New("no statuses found")
 	}
-	mostSevere := slices.MinFunc(line.Statuses, func(a, b *LineStatus) int {
+	mostSevere := slices.MinFunc(line.Statuses, func(a, b *lineStatus) int {
 		return cmp.Compare(a.Severity(), b.Severity())
 	})
 	return mostSevere, nil
 }
 
-func (line *Line) lineColor() *color.Color {
+func (line *lineWithStatuses) lineColor() *color.Color {
 	var lineColor *color.Color
 	var ok bool
 	lineColor, ok = lineColors[line.Id]
@@ -107,7 +115,7 @@ func (line *Line) lineColor() *color.Color {
 	}
 }
 
-func (line *Line) ToRowWithStatus(withColor bool) (output.Row, error) {
+func (line *lineWithStatuses) toRow(withColor bool) (output.Row, error) {
 	lineCell := output.Cell{}
 	statusCell := output.Cell{}
 	row := output.Row{}
@@ -118,7 +126,7 @@ func (line *Line) ToRowWithStatus(withColor bool) (output.Row, error) {
 	lineColor := line.lineColor()
 	severityColor := mostSevere.severityColor()
 	if lineColor != nil && withColor {
-		lineCell.AddText("    ", lineColor)
+		lineCell.AddText(" ", lineColor)
 		lineCell.AddText(" ", nil)
 	}
 	lineCell.AddText(line.Name, nil)
@@ -128,14 +136,43 @@ func (line *Line) ToRowWithStatus(withColor bool) (output.Row, error) {
 	return row, nil
 }
 
-func GetLineStatuses(lineIds []string, apiKey string) ([]Line, error) {
+func getLineStatuses(lineIds []string, apiKey string) ([]lineWithStatuses, error) {
 	url, err := lineStatusUrl(lineIds)
 	if err != nil {
 		return nil, err
 	}
-	lines, err := request[[]Line](url, apiKey)
+	lines, err := request[[]lineWithStatuses](url, apiKey)
 	if err != nil {
 		return nil, err
 	}
 	return lines, nil
+}
+
+func LineStatusTable(
+	lineIds []string,
+	apiKey string,
+	options output.Options,
+) (output.Table, error) {
+	table := output.Table{}
+	lines, err := getLineStatuses(lineIds, apiKey)
+	if err != nil {
+		return table, err
+	}
+	if options.Header {
+		table.AddRow(output.NewRow(
+			output.NewCell("Line", color.New(color.Bold)),
+			output.NewCell("Status", color.New(color.Bold)),
+		))
+	}
+	for _, line := range lines {
+		row, err := line.toRow(options.Color)
+		if err != nil {
+			return table, err
+		}
+		table.AddRow(row)
+	}
+	if options.Timestamp {
+		table.Timestamp()
+	}
+	return table, nil
 }

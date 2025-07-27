@@ -20,7 +20,7 @@ var searchLineCmd = &cobra.Command{
 		table := output.Table{}
 		for _, mode := range results {
 			for _, line := range mode {
-				table.AddRow(line.ToRowWithMode())
+				table.AddRow(line.ToRow())
 			}
 		}
 		table.Print("\t", true, false)

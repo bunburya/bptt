@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"ptt/nre"
+	"ptt/output"
 
 	"github.com/spf13/cobra"
 )
@@ -24,14 +25,13 @@ var departuresCmd = &cobra.Command{
 		}
 		callPoints, _ := cmd.Flags().GetStringSlice("calls")
 		showPlatform, _ := cmd.Flags().GetBool("platform")
-		useColor, _ := cmd.Flags().GetBool("color")
 		count, _ := cmd.Flags().GetInt("count")
-		depBoard, err := nre.GetDepartureBoard(args[0], apiToken)
+		opt := output.OptionsFromFlags(cmd.Flags())
+		table, err := nre.DeparturesTable(args[0], callPoints, count, apiToken, showPlatform, opt)
 		if err != nil {
 			return err
 		}
-		table := nre.DisplayDepartureBoard(depBoard, callPoints, showPlatform, count)
-		table.Print("\t", true, useColor)
+		table.Print("\t", true, opt.Color)
 		return nil
 	},
 }

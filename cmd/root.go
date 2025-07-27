@@ -34,5 +34,7 @@ func init() {
 	rootCmd.AddCommand(nre.NreCmd)
 
 	rootCmd.PersistentFlags().Bool("color", false, "use colour in output (where possible)")
+	rootCmd.PersistentFlags().Bool("header", false, "print header row")
+	rootCmd.PersistentFlags().Bool("timestamp", false, "print last updated time as footer")
 
 }

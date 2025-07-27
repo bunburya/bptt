@@ -95,7 +95,13 @@ func SearchLines(modes []string, apiKey string) (map[string][]Line, error) {
 	return results, nil
 }
 
-func (line *Line) ToRowWithMode() output.Row {
+type Line struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+	Mode string `json:"modeName"`
+}
+
+func (line *Line) ToRow() output.Row {
 	return output.NewRow(
 		output.NewCell(line.Name, nil),
 		output.NewCell(line.Id, nil),

@@ -1,0 +1,11 @@
+- Bikes
+- Roads
+- Air quality
+- Traveline
+- Output config
+  - fixed column width
+  - header
+  - timestamp
+- Config
+  - default stations/aliases
+  - api keys

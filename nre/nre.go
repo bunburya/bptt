@@ -10,7 +10,7 @@ import (
 	nr "github.com/martinsirbe/go-national-rail-client/nationalrail"
 )
 
-func GetDepartureBoard(crs string, apiKey string) (*nr.StationBoard, error) {
+func getDepartureBoard(crs string, apiKey string) (*nr.StationBoard, error) {
 	client, err := nr.NewClient(nr.AccessTokenOpt(apiKey))
 	if err != nil {
 		return nil, err
@@ -34,14 +34,20 @@ func filterServicesByCallPoint(services []*nr.TrainService, dests []string) []*n
 	return filtered
 }
 
-func DisplayDepartureBoard(
-	board *nr.StationBoard,
+func DeparturesTable(
+	crs string,
 	callPoints []string,
-	showPlatform bool,
 	count int,
-) output.Table {
-
+	apiKey string,
+	showPlatform bool,
+	options output.Options,
+) (output.Table, error) {
 	table := output.Table{}
+	board, err := getDepartureBoard(crs, apiKey)
+	if err != nil {
+		return table, err
+	}
+
 	services := board.TrainServices
 	if len(callPoints) > 0 {
 		services = filterServicesByCallPoint(services, callPoints)
@@ -49,6 +55,22 @@ func DisplayDepartureBoard(
 	if count > 0 {
 		services = services[:min(count, len(services))]
 	}
+
+	if options.Header {
+		var pHeader string
+		if showPlatform {
+			pHeader = "Platform"
+		} else {
+			pHeader = ""
+		}
+		table.AddRow(output.NewRow(
+			output.NewCell("Destination", color.New(color.Bold)),
+			output.NewCell(pHeader, color.New(color.Bold)),
+			output.NewCell("STD", color.New(color.Bold)),
+			output.NewCell("ETD", color.New(color.Bold)),
+		))
+	}
+
 	for _, s := range services {
 		// TODO: Double check that this is sufficient to determine if a service is delayed or cancelled.
 		// https://wiki.openraildata.com/index.php/GetDepBoardWithDetails suggests that delayed trains may not display
@@ -79,5 +101,8 @@ func DisplayDepartureBoard(
 			output.NewCell(s.ETD, etdColor),
 		))
 	}
-	return table
+	if options.Timestamp {
+		table.Timestamp()
+	}
+	return table, nil
 }
