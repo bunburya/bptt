@@ -6,6 +6,7 @@ import (
 	"ptt/cmd/tfl"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -34,7 +35,10 @@ func init() {
 	rootCmd.AddCommand(nre.NreCmd)
 
 	rootCmd.PersistentFlags().Bool("color", false, "use colour in output (where possible)")
+	_ = viper.BindPFlag("color", rootCmd.PersistentFlags().Lookup("color"))
 	rootCmd.PersistentFlags().Bool("header", false, "print header row")
+	_ = viper.BindPFlag("header", rootCmd.PersistentFlags().Lookup("header"))
 	rootCmd.PersistentFlags().Bool("timestamp", false, "print last updated time as footer")
+	_ = viper.BindPFlag("timestamp", rootCmd.PersistentFlags().Lookup("timestamp"))
 
 }

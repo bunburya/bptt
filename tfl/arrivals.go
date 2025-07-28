@@ -3,6 +3,7 @@ package tfl
 import (
 	"errors"
 	"fmt"
+	"ptt/config"
 	"ptt/output"
 	"slices"
 	"sort"
@@ -45,6 +46,7 @@ func getStopArrivals(naptanId string, lines []string, count int, apiKey string) 
 	if len(naptanId) == 0 {
 		return nil, errors.New("no naptanId provided")
 	}
+	naptanId = config.ResolveAlias("tfl.stop_point_aliases", naptanId)
 	url := arrivalsUrl(naptanId)
 	arrivals, err := request[[]arrival](url, apiKey)
 	if err != nil {

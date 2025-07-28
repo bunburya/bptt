@@ -144,5 +144,6 @@ func OptionsFromFlags(flags *pflag.FlagSet) Options {
 	withColor, _ := flags.GetBool("color")
 	withHeader, _ := flags.GetBool("header")
 	withTimestamp, _ := flags.GetBool("timestamp")
+	color.NoColor = !withColor
 	return Options{withColor, withHeader, withTimestamp}
 }

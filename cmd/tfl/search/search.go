@@ -3,7 +3,8 @@ package search
 import "github.com/spf13/cobra"
 
 var SearchCmd = &cobra.Command{
-	Use: "search",
+	Use:   "search",
+	Short: "Search various TfL resources",
 }
 
 func init() {

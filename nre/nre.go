@@ -2,6 +2,7 @@ package nre
 
 import (
 	"fmt"
+	"ptt/config"
 	"ptt/output"
 	"slices"
 	"strings"
@@ -43,6 +44,7 @@ func DeparturesTable(
 	options output.Options,
 ) (output.Table, error) {
 	table := output.Table{}
+	crs = config.ResolveAlias("nre.station_aliases", crs)
 	board, err := getDepartureBoard(crs, apiKey)
 	if err != nil {
 		return table, err

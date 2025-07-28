@@ -1,0 +1,17 @@
+color = false
+header = false
+timestamp = false
+
+[tfl]
+api_key = ""
+
+[tfl.stop_point_aliases]
+bank = "490011218B"
+moorgate = "490015208A"
+
+[nre]
+api_key = ""
+
+[nre.station_aliases]
+city = "CTX"
+kx = "KGX"
