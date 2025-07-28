@@ -2,6 +2,7 @@ package nre
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // NreCmd represents the nre command
@@ -13,7 +14,7 @@ var NreCmd = &cobra.Command{
 func init() {
 	NreCmd.AddCommand(departuresCmd)
 
-	// Here you will define your flags and configuration settings.
-	NreCmd.PersistentFlags().StringP("token", "t", "", "National Rail API token")
+	NreCmd.PersistentFlags().StringP("api-key", "k", "", "National Rail API token")
+	_ = viper.BindPFlag("nre.api_key", NreCmd.PersistentFlags().Lookup("api-key"))
 
 }

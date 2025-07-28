@@ -2,11 +2,11 @@ package nre
 
 import (
 	"errors"
-	"os"
 	"ptt/nre"
 	"ptt/output"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // departuresCmd represents the departures command
@@ -16,17 +16,15 @@ var departuresCmd = &cobra.Command{
 	Long:  `View departures board for the given station. The station should be identified by its CRS code.`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		apiToken, _ := cmd.Flags().GetString("token")
+		//apiToken, _ := cmd.Flags().GetString("api-key")
+		apiToken := viper.GetString("nre.api_key")
 		if apiToken == "" {
-			apiToken = os.Getenv("PTT_NRE_API_TOKEN")
-		}
-		if apiToken == "" {
-			return errors.New("API token is required")
+			return errors.New("API key is required")
 		}
 		callPoints, _ := cmd.Flags().GetStringSlice("calls")
 		showPlatform, _ := cmd.Flags().GetBool("platform")
 		count, _ := cmd.Flags().GetInt("count")
-		opt := output.OptionsFromFlags(cmd.Flags())
+		opt := output.OptionsFromConfig()
 		table, err := nre.DeparturesTable(args[0], callPoints, count, apiToken, showPlatform, opt)
 		if err != nil {
 			return err

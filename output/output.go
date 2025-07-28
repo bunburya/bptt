@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 type span struct {
@@ -140,10 +140,10 @@ type Options struct {
 	Timestamp bool
 }
 
-func OptionsFromFlags(flags *pflag.FlagSet) Options {
-	withColor, _ := flags.GetBool("color")
-	withHeader, _ := flags.GetBool("header")
-	withTimestamp, _ := flags.GetBool("timestamp")
+func OptionsFromConfig() Options {
+	withColor := viper.GetBool("color")
+	withHeader := viper.GetBool("header")
+	withTimestamp := viper.GetBool("timestamp")
 	color.NoColor = !withColor
 	return Options{withColor, withHeader, withTimestamp}
 }

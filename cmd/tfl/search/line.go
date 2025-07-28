@@ -5,6 +5,7 @@ import (
 	"ptt/tfl"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var searchLineCmd = &cobra.Command{
@@ -12,8 +13,8 @@ var searchLineCmd = &cobra.Command{
 	Short: "search for all lines of the given modes",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		apiKey, _ := cmd.Flags().GetString("api-key")
-		opt := output.OptionsFromFlags(cmd.Flags())
+		apiKey := viper.GetString("tfl.api_key")
+		opt := output.OptionsFromConfig()
 		table, err := tfl.LinesTable(args, apiKey, opt)
 		if err != nil {
 			return err

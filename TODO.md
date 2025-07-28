@@ -3,6 +3,3 @@
 - Traveline
 - Output config
   - fixed column width
-- Config
-  - default stations/aliases
-  - api keys

@@ -4,6 +4,7 @@ import (
 	"ptt/cmd/tfl/search"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // TflCmd represents the tfl command
@@ -18,4 +19,5 @@ func init() {
 	TflCmd.AddCommand(bikesCmd)
 	TflCmd.AddCommand(search.SearchCmd)
 	TflCmd.PersistentFlags().StringP("api-key", "k", "", "TfL API key")
+	_ = viper.BindPFlag("tfl.api_key", TflCmd.PersistentFlags().Lookup("api-key"))
 }

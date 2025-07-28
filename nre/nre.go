@@ -19,14 +19,23 @@ func getDepartureBoard(crs string, apiKey string) (*nr.StationBoard, error) {
 	return client.GetDeparturesWithDetails(nr.CRSCode(crs))
 }
 
-func filterServicesByCallPoint(services []*nr.TrainService, dests []string) []*nr.TrainService {
+func resolveCallPointAliases(crs []string) []string {
+	var resolved []string
+	for _, c := range crs {
+		resolved = append(resolved, config.ResolveAlias("nre.station_aliases", c))
+	}
+	return resolved
+}
+
+func filterServicesByCallPoint(services []*nr.TrainService, callPoints []string) []*nr.TrainService {
 	var filtered []*nr.TrainService
+	callPoints = resolveCallPointAliases(callPoints)
 	for _, service := range services {
 		if service == nil {
 			continue
 		}
 		for _, callPoint := range service.SubsequentCallingPoints {
-			if slices.Contains(dests, callPoint.CRS) {
+			if slices.Contains(callPoints, callPoint.CRS) {
 				filtered = append(filtered, service)
 				break
 			}

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var searchBikeCmd = &cobra.Command{
@@ -14,8 +15,8 @@ var searchBikeCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		searchStr := strings.Join(args, " ")
-		apiKey, _ := cmd.Flags().GetString("api-key")
-		opt := output.OptionsFromFlags(cmd.Flags())
+		apiKey := viper.GetString("tfl.api_key")
+		opt := output.OptionsFromConfig()
 		table, err := tfl.BikePointsTable(searchStr, apiKey, opt)
 		if err != nil {
 			return nil

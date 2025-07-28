@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var searchStopCmd = &cobra.Command{
@@ -15,8 +16,8 @@ var searchStopCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		searchStr := strings.Join(args, " ")
 		modes, _ := cmd.Flags().GetStringSlice("modes")
-		apiKey, _ := cmd.Flags().GetString("api-key")
-		opt := output.OptionsFromFlags(cmd.Flags())
+		apiKey := viper.GetString("tfl.api_key")
+		opt := output.OptionsFromConfig()
 		table, err := tfl.StopPointsTable(searchStr, modes, apiKey, opt)
 		if err != nil {
 			return err

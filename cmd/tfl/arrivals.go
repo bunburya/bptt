@@ -5,6 +5,7 @@ import (
 	"ptt/tfl"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // arrivalsCmd represents the arrivals command
@@ -16,8 +17,8 @@ var arrivalsCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		lines, _ := cmd.Flags().GetStringSlice("lines")
 		count, _ := cmd.Flags().GetInt("count")
-		apiKey, _ := cmd.Flags().GetString("api-key")
-		opt := output.OptionsFromFlags(cmd.Flags())
+		apiKey := viper.GetString("tfl.api_key")
+		opt := output.OptionsFromConfig()
 		table, err := tfl.ArrivalsTable(args[0], lines, count, apiKey, opt)
 		if err != nil {
 			return err
