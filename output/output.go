@@ -38,6 +38,9 @@ func (cell *Cell) Sprint(withColor bool, maxLen int, ellipsis bool) string {
 		var toAdd string
 		if (maxLen >= 0) && (rawLen+len(span.text) > maxLen) {
 			toAdd = span.text[:(maxLen - rawLen)]
+			if ellipsis {
+				toAdd = toAdd[:len(toAdd)-1] + "…"
+			}
 			clipped = true
 		} else {
 			toAdd = span.text
@@ -51,9 +54,6 @@ func (cell *Cell) Sprint(withColor bool, maxLen int, ellipsis bool) string {
 		if clipped {
 			break
 		}
-	}
-	if clipped && ellipsis {
-		s = s[:len(s)-1] + "…"
 	}
 	return s
 }
@@ -98,6 +98,7 @@ func (t *Table) Timestamp() {
 }
 
 func (t *Table) Print(sep string, padded bool, withColor bool) {
+	var s string
 	maxRowLen := 0
 	for _, row := range t.rows {
 		maxRowLen = max(maxRowLen, len(row.cells))
@@ -117,21 +118,22 @@ func (t *Table) Print(sep string, padded bool, withColor bool) {
 	}
 	for _, row := range t.rows {
 		for i, cell := range row.cells {
-			fmt.Print(cell.Sprint(withColor, -1, false))
+			s += cell.Sprint(withColor, -1, false)
 			if padded {
 				padding := maxCellLens[i] - cell.rawLen
-				fmt.Print(strings.Repeat(" ", padding))
+				s += strings.Repeat(" ", padding)
 			}
 			if i < len(row.cells)-1 {
-				fmt.Print(sep)
+				s += sep
 			} else {
-				fmt.Println()
+				s += "\n"
 			}
 		}
 	}
 	if t.footer != "" {
-		fmt.Println(t.footer)
+		s += t.footer + "\n"
 	}
+	fmt.Print(s)
 }
 
 type Options struct {

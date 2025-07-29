@@ -4,6 +4,7 @@ import (
 	"os"
 	"ptt/cmd/nre"
 	"ptt/cmd/tfl"
+	"ptt/cmd/waqi"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -33,6 +34,7 @@ func init() {
 
 	rootCmd.AddCommand(tfl.TflCmd)
 	rootCmd.AddCommand(nre.NreCmd)
+	rootCmd.AddCommand(waqi.AqiCmd)
 
 	rootCmd.PersistentFlags().Bool("color", false, "use colour in output (where possible)")
 	_ = viper.BindPFlag("color", rootCmd.PersistentFlags().Lookup("color"))
