@@ -19,7 +19,7 @@ var bikesCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		t.Print("\t", true, opt.Color)
+		t.Print("\t", true, opt.Color, "no data available")
 		return nil
 	},
 }

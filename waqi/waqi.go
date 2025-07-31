@@ -125,7 +125,7 @@ func CityAqiTable(city string, apiKey string, options output.Options) (output.Ta
 		return t, err
 	}
 	if options.Header {
-		t.AddRow(output.NewRow(
+		t.SetHeader(output.NewRow(
 			output.NewCell("AQI", color.New(color.Bold)),
 			output.NewCell("Description", color.New(color.Bold)),
 		))

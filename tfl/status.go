@@ -159,7 +159,7 @@ func LineStatusTable(
 		return table, err
 	}
 	if options.Header {
-		table.AddRow(output.NewRow(
+		table.SetHeader(output.NewRow(
 			output.NewCell("Line", color.New(color.Bold)),
 			output.NewCell("Status", color.New(color.Bold)),
 		))

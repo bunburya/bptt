@@ -74,7 +74,7 @@ func DeparturesTable(
 		} else {
 			pHeader = ""
 		}
-		table.AddRow(output.NewRow(
+		table.SetHeader(output.NewRow(
 			output.NewCell("Destination", color.New(color.Bold)),
 			output.NewCell(pHeader, color.New(color.Bold)),
 			output.NewCell("STD", color.New(color.Bold)),

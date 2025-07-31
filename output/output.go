@@ -46,7 +46,9 @@ func (cell *Cell) Sprint(withColor bool, maxLen int, ellipsis bool) string {
 			toAdd = span.text
 		}
 		if withColor && (span.color != nil) {
-			s += span.color.Sprint(toAdd)
+			// color library adds a verbose reset code (eg `\xb[0;22;0;0;0m`) which seems to trip up some renderers, so
+			// we add a more standard reset code to the end
+			s += span.color.Sprint(toAdd) + "\x1b[0m"
 		} else {
 			s += toAdd
 		}
@@ -81,11 +83,16 @@ func NewRow(cells ...Cell) Row {
 
 type Table struct {
 	rows   []Row
+	header *Row
 	footer string
 }
 
 func (t *Table) AddRow(row Row) {
 	t.rows = append(t.rows, row)
+}
+
+func (t *Table) SetHeader(header Row) {
+	t.header = &header
 }
 
 func (t *Table) SetFooter(footer string) {
@@ -97,14 +104,19 @@ func (t *Table) Timestamp() {
 	t.SetFooter(fmt.Sprintf("Last updated: %s", timestamp))
 }
 
-func (t *Table) Print(sep string, padded bool, withColor bool) {
+func (t *Table) Print(sep string, padded bool, withColor bool, emptyMsg string) {
 	var s string
+	var rows []Row
+	if t.header != nil {
+		rows = append(rows, *t.header)
+	}
+	rows = append(rows, t.rows...)
 	maxRowLen := 0
-	for _, row := range t.rows {
+	for _, row := range rows {
 		maxRowLen = max(maxRowLen, len(row.cells))
 	}
 	maxCellLens := make([]int, maxRowLen)
-	for _, row := range t.rows {
+	for _, row := range rows {
 		for i := range maxRowLen {
 			cell := row.GetCell(i)
 			var cellLen int
@@ -116,7 +128,7 @@ func (t *Table) Print(sep string, padded bool, withColor bool) {
 			maxCellLens[i] = max(maxCellLens[i], cellLen)
 		}
 	}
-	for _, row := range t.rows {
+	for _, row := range rows {
 		for i, cell := range row.cells {
 			s += cell.Sprint(withColor, -1, false)
 			if padded {
@@ -130,10 +142,14 @@ func (t *Table) Print(sep string, padded bool, withColor bool) {
 			}
 		}
 	}
+	if len(t.rows) == 0 {
+		s += fmt.Sprintln(emptyMsg)
+	}
 	if t.footer != "" {
 		s += t.footer + "\n"
 	}
 	fmt.Print(s)
+	//fmt.Printf("%q", s)
 }
 
 type Options struct {

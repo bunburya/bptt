@@ -115,7 +115,7 @@ func BikesTable(bikePointIds []string, apiKey string, options output.Options) (o
 		return t, err
 	}
 	if options.Header {
-		t.AddRow(output.NewRow(
+		t.SetHeader(output.NewRow(
 			output.NewCell("Station", color.New(color.Bold)),
 			output.NewCell("Bikes", color.New(color.Bold)),
 			output.NewCell("E-Bikes", color.New(color.Bold)),

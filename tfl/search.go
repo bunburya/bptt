@@ -208,7 +208,7 @@ func BikePointsTable(query string, apiKey string, options output.Options) (outpu
 		return t, err
 	}
 	if options.Header {
-		t.AddRow(output.NewRow(
+		t.SetHeader(output.NewRow(
 			output.NewCell("Name", color.New(color.Bold)),
 			output.NewCell("ID", color.New(color.Bold)),
 			output.NewCell("Latitude", color.New(color.Bold)),

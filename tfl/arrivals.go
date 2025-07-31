@@ -81,7 +81,7 @@ func ArrivalsTable(
 		return table, err
 	}
 	if options.Header {
-		table.AddRow(output.NewRow(
+		table.SetHeader(output.NewRow(
 			output.NewCell("Line", color.New(color.Bold)),
 			output.NewCell("Destination", color.New(color.Bold)),
 			output.NewCell("ETA", color.New(color.Bold)),

@@ -19,7 +19,7 @@ var searchModeCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		table.Print("\t", true, opt.Color)
+		table.Print("\t", true, opt.Color, "no data available")
 		return nil
 	},
 }
