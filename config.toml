@@ -13,7 +13,7 @@ moorgate = "490015208A"
 api_key = ""
 
 [nre.station_aliases]
-city = "CTX"
+city = "CTK"
 kx = "KGX"
 
 [waqi]
