@@ -32,6 +32,9 @@ func (cell *Cell) AddText(text string, color *color.Color) {
 
 func (cell *Cell) Sprint(withColor bool, maxLen int, ellipsis bool) string {
 	var s string
+	if maxLen == 0 {
+		return s
+	}
 	clipped := false
 	rawLen := 0
 	for _, span := range cell.spans {
@@ -129,7 +132,10 @@ func (t *Table) Print(sep string, padded bool, withColor bool, emptyMsg string, 
 		}
 	}
 	for i := range min(len(maxColSize), len(fixColSize)) {
-		maxColSize[i] = fixColSize[i]
+		if fixColSize[i] >= 0 {
+			maxColSize[i] = fixColSize[i]
+		}
+
 	}
 	for _, row := range rows {
 		for i, cell := range row.cells {
