@@ -3,6 +3,7 @@ package waqi
 import (
 	"ptt/output"
 	"ptt/waqi"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,11 +12,11 @@ import (
 var AqiCmd = &cobra.Command{
 	Use:   "waqi",
 	Short: "Report today's Air Quality Index for a given location.",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		opt := output.OptionsFromConfig()
 		apiKey := viper.GetString("waqi.api_key")
-		table, err := waqi.CityAqiTable(args[0], apiKey, opt)
+		table, err := waqi.CityAqiTable(strings.Join(args, " "), apiKey, opt)
 		if err != nil {
 			return err
 		}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"ptt/output"
 
 	"github.com/fatih/color"
@@ -120,7 +121,8 @@ func getLatLonForecast(lat float64, lon float64, apiKey string) (aqi, error) {
 
 func CityAqiTable(city string, apiKey string, options output.Options) (output.Table, error) {
 	t := output.Table{}
-	f, err := getCityForecast(city, apiKey)
+	query := url.PathEscape(city)
+	f, err := getCityForecast(query, apiKey)
 	if err != nil {
 		return t, err
 	}
