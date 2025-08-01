@@ -1,27 +1,29 @@
-package search
+package tfl
 
 import (
 	"ptt/output"
 	"ptt/tfl"
-	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-var searchBikeCmd = &cobra.Command{
-	Use:   "bike",
-	Short: "search for bike points with the given string in their name",
+// statusCmd represents the status command
+var modeStatusCmd = &cobra.Command{
+	Use:   "modestatus",
+	Short: "View the current service status of each line of the given modes",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		searchStr := strings.Join(args, " ")
+		modeIds := args
 		apiKey := viper.GetString("tfl.api_key")
 		opt := output.OptionsFromConfig()
-		table, err := tfl.BikePointsTable(searchStr, apiKey, opt)
+		table, err := tfl.ModeStatusTable(modeIds, apiKey, opt)
 		if err != nil {
-			return nil
+			return err
 		}
 		table.Print("\t", true, opt.Color, "no data available", opt.ColSize)
 		return nil
 	},
 }
+
+func init() {}

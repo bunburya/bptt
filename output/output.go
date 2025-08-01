@@ -104,7 +104,7 @@ func (t *Table) Timestamp() {
 	t.SetFooter(fmt.Sprintf("Last updated: %s", timestamp))
 }
 
-func (t *Table) Print(sep string, padded bool, withColor bool, emptyMsg string) {
+func (t *Table) Print(sep string, padded bool, withColor bool, emptyMsg string, fixColSize []int) {
 	var s string
 	var rows []Row
 	if t.header != nil {
@@ -115,25 +115,30 @@ func (t *Table) Print(sep string, padded bool, withColor bool, emptyMsg string) 
 	for _, row := range rows {
 		maxRowLen = max(maxRowLen, len(row.cells))
 	}
-	maxCellLens := make([]int, maxRowLen)
+	maxColSize := make([]int, maxRowLen)
 	for _, row := range rows {
 		for i := range maxRowLen {
 			cell := row.GetCell(i)
 			var cellLen int
 			if cell == nil {
-				cellLen = 0
+				cellLen = -1
 			} else {
 				cellLen = cell.rawLen
 			}
-			maxCellLens[i] = max(maxCellLens[i], cellLen)
+			maxColSize[i] = max(maxColSize[i], cellLen)
 		}
+	}
+	for i := range min(len(maxColSize), len(fixColSize)) {
+		maxColSize[i] = fixColSize[i]
 	}
 	for _, row := range rows {
 		for i, cell := range row.cells {
-			s += cell.Sprint(withColor, -1, false)
+			s += cell.Sprint(withColor, maxColSize[i], true)
 			if padded {
-				padding := maxCellLens[i] - cell.rawLen
-				s += strings.Repeat(" ", padding)
+				padding := maxColSize[i] - cell.rawLen
+				if padding > 0 {
+					s += strings.Repeat(" ", padding)
+				}
 			}
 			if i < len(row.cells)-1 {
 				s += sep
@@ -156,12 +161,14 @@ type Options struct {
 	Color     bool
 	Header    bool
 	Timestamp bool
+	ColSize   []int
 }
 
 func OptionsFromConfig() Options {
 	withColor := viper.GetBool("color")
 	withHeader := viper.GetBool("header")
 	withTimestamp := viper.GetBool("timestamp")
+	colSize := viper.GetIntSlice("column_size")
 	color.NoColor = !withColor
-	return Options{withColor, withHeader, withTimestamp}
+	return Options{withColor, withHeader, withTimestamp, colSize}
 }

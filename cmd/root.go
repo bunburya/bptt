@@ -42,5 +42,7 @@ func init() {
 	_ = viper.BindPFlag("header", rootCmd.PersistentFlags().Lookup("header"))
 	rootCmd.PersistentFlags().Bool("timestamp", false, "print last updated time as footer")
 	_ = viper.BindPFlag("timestamp", rootCmd.PersistentFlags().Lookup("timestamp"))
+	rootCmd.PersistentFlags().IntSlice("col-size", []int{}, "set fixed width for each column in output")
+	_ = viper.BindPFlag("column_size", rootCmd.PersistentFlags().Lookup("col-size"))
 
 }

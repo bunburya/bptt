@@ -15,3 +15,6 @@ api_key = ""
 [nre.station_aliases]
 city = "CTX"
 kx = "KGX"
+
+[waqi]
+api_key = ""

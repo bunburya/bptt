@@ -45,6 +45,13 @@ func lineStatusUrl(lines []string) (string, error) {
 	return fmt.Sprintf("%s/Line/%s/Status", BaseUrl, strings.Join(lines, ",")), nil
 }
 
+func modeStatusUrl(modes []string) (string, error) {
+	if len(modes) == 0 {
+		return "", errors.New("no modes provided")
+	}
+	return fmt.Sprintf("%s/Line/Mode/%s/Status", BaseUrl, strings.Join(modes, ",")), nil
+}
+
 type lineStatus struct {
 	Description string  `json:"statusSeverityDescription"`
 	Reason      *string `json:"reason,omitempty"`
@@ -136,11 +143,7 @@ func (line *lineWithStatuses) toRow(withColor bool) (output.Row, error) {
 	return row, nil
 }
 
-func getLineStatuses(lineIds []string, apiKey string) ([]lineWithStatuses, error) {
-	url, err := lineStatusUrl(lineIds)
-	if err != nil {
-		return nil, err
-	}
+func getLineStatuses(url string, apiKey string) ([]lineWithStatuses, error) {
 	lines, err := request[[]lineWithStatuses](url, apiKey)
 	if err != nil {
 		return nil, err
@@ -148,13 +151,13 @@ func getLineStatuses(lineIds []string, apiKey string) ([]lineWithStatuses, error
 	return lines, nil
 }
 
-func LineStatusTable(
-	lineIds []string,
+func statusTable(
+	url string,
 	apiKey string,
 	options output.Options,
 ) (output.Table, error) {
 	table := output.Table{}
-	lines, err := getLineStatuses(lineIds, apiKey)
+	lines, err := getLineStatuses(url, apiKey)
 	if err != nil {
 		return table, err
 	}
@@ -175,4 +178,20 @@ func LineStatusTable(
 		table.Timestamp()
 	}
 	return table, nil
+}
+
+func LineStatusTable(lines []string, apiKey string, options output.Options) (output.Table, error) {
+	url, err := lineStatusUrl(lines)
+	if err != nil {
+		return output.Table{}, err
+	}
+	return statusTable(url, apiKey, options)
+}
+
+func ModeStatusTable(modes []string, apiKey string, options output.Options) (output.Table, error) {
+	url, err := modeStatusUrl(modes)
+	if err != nil {
+		return output.Table{}, err
+	}
+	return statusTable(url, apiKey, options)
 }

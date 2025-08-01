@@ -15,6 +15,7 @@ var TflCmd = &cobra.Command{
 
 func init() {
 	TflCmd.AddCommand(statusCmd)
+	TflCmd.AddCommand(modeStatusCmd)
 	TflCmd.AddCommand(arrivalsCmd)
 	TflCmd.AddCommand(bikesCmd)
 	TflCmd.AddCommand(search.SearchCmd)
