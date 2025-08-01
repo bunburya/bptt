@@ -1,5 +1,2 @@
-- Name?
 - Roads
 - Traveline
-- Output config
-  - fixed column width
