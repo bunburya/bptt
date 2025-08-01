@@ -1,20 +1,41 @@
+# Whether to use colour in the output.
 color = false
+# Whether the output should include a header row with the column names.
 header = false
+# Whether the output should include a "Last updated" timestamp at the end.
 timestamp = false
 
+# Options related to the `tfl` command.
 [tfl]
+
+# TfL API key.
 api_key = ""
 
+# Mapping of aliases to NaPTAN IDs. Where a command requires a NaPTAN ID as an argument, you can use the alias instead.
+# Aliases should be alphanumeric and not contain spaces.
 [tfl.stop_point_aliases]
 bank = "490011218B"
 moorgate = "490015208A"
 
+# Mapping of aliases to bike point IDs. Where a command requires a bike point ID as an argument, you can use the alias
+# instead. Aliases should be alphanumeric and not contain spaces.
+[tfl.bike_point_aliases]
+cheapside = "BikePoints_427"
+
+# Options related to the `nre` command.
 [nre]
+
+# NRE API key.
 api_key = ""
 
+# Mapping of aliases to CRS codes. Where a command requires a CRS code as an argument, you can use the alias instead.
+# Aliases should be alphanumeric and not contain spaces.
 [nre.station_aliases]
 city = "CTK"
 kx = "KGX"
 
+# Options related to the `waqi` command.
 [waqi]
+
+# WAQI API key.
 api_key = ""

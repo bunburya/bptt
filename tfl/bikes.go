@@ -3,6 +3,7 @@ package tfl
 import (
 	"encoding/json"
 	"fmt"
+	"ptt/config"
 	"ptt/output"
 	"slices"
 	"strconv"
@@ -97,6 +98,7 @@ func getMultiBikePoints(ids []string, apiKey string) ([]bikePointWithStatus, err
 }
 
 func getBikePoints(bpIds []string, apiKey string) ([]bikePointWithStatus, error) {
+	bpIds = config.ResolveAliases("tfl.bike_point_aliases", bpIds)
 	if len(bpIds) == 1 {
 		bp, err := getSingleBikePoint(bpIds[0], apiKey)
 		if err != nil {

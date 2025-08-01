@@ -5,10 +5,8 @@ package main
 
 import (
 	"ptt/cmd"
-	"ptt/config"
 )
 
 func main() {
-	_ = config.InitConfig()
 	cmd.Execute()
 }

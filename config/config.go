@@ -14,17 +14,31 @@ func ResolveAlias(configKey string, alias string) string {
 	}
 }
 
-func InitConfig() error {
-	confDir := configdir.LocalConfig("ptt")
+func ResolveAliases(configKey string, aliases []string) []string {
+	aliasMap := viper.GetStringMapString(configKey)
+	var resolved []string
+	for _, alias := range aliases {
+		if value, ok := aliasMap[alias]; ok {
+			resolved = append(resolved, value)
+		} else {
+			resolved = append(resolved, alias)
+		}
+	}
+	return resolved
+}
+
+func InitConfig() {
 	viper.SetDefault("color", false)
 	viper.SetDefault("header", false)
 	viper.SetDefault("timestamp", false)
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
-	viper.AddConfigPath(confDir)
-	err := viper.ReadInConfig()
-	if err != nil {
-		return err
+	confFile := viper.GetString("config")
+	if confFile != "" {
+		viper.SetConfigFile(confFile)
+	} else {
+		confDir := configdir.LocalConfig("ptt")
+		viper.AddConfigPath(confDir)
 	}
-	return nil
+	_ = viper.ReadInConfig()
 }

@@ -5,6 +5,7 @@ import (
 	"ptt/cmd/nre"
 	"ptt/cmd/tfl"
 	"ptt/cmd/waqi"
+	"ptt/config"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -30,6 +31,11 @@ func Execute() {
 
 func init() {
 
+	var confFile string
+	rootCmd.PersistentFlags().StringVarP(&confFile, "config", "c", "", "path to config file")
+	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	cobra.OnInitialize(config.InitConfig)
+
 	rootCmd.Root().CompletionOptions.DisableDefaultCmd = true
 
 	rootCmd.AddCommand(tfl.TflCmd)
@@ -44,5 +50,4 @@ func init() {
 	_ = viper.BindPFlag("timestamp", rootCmd.PersistentFlags().Lookup("timestamp"))
 	rootCmd.PersistentFlags().IntSlice("col-size", []int{}, "set fixed width for each column in output")
 	_ = viper.BindPFlag("column_size", rootCmd.PersistentFlags().Lookup("col-size"))
-
 }
