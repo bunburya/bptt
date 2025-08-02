@@ -1,7 +1,8 @@
 # `ptt`
 
 `ptt` (**P**ublic **T**ransport in the **T**erminal) is a simple command line application that displays information
-about various public transport services.
+about various public transport services. Currently the focus is on London / the UK, and the main suppored services are
+Transport for London (TfL) and National Rail.
 
 It is divided into commands and sub-commands. The currently supported top-level commands are:
 
