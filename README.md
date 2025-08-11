@@ -21,22 +21,22 @@ It is divided into commands and sub-commands. The currently supported top-level 
 The `tfl` commands generally take line, mode, stop or bike station IDs in the form used by the TfL API.  Some
 examples of what these ID look like:
 
-- Mode: `tube`, `bus`, `river-bus`, etc. Use `ptt tfl search mode` to see all modes supported by the TfL API (but note that some modes, such as `walking`, won't work with commands like `modestatus`).
+- Mode: `tube`, `bus`, `river-bus`, etc. Use `bptt tfl search mode` to see all modes supported by the TfL API (but note that some modes, such as `walking`, won't work with commands like `modestatus`).
 - Line: `northern`, `waterloo-city`, `sl4`, `suffragette`, etc. Use `tfl search line <mode-id>` to see all line IDs for the given mode. 
 - Stop: These are [NaPTAN IDs](https://www.data.gov.uk/dataset/ff93ffc1-6656-47d8-9155-85ea0b8f2251/naptan), eg, `490011218B`. There are a few ways to access these:
   - You can download a full list from the above link.
   - You can view the stop on [OpenStreetMap](https://www.openstreetmap.org) and look for the `naptan:AtcoCode` tag.
-  - You can try `ptt tfl search stop <search string>`. However, note that often that command (like the API endpoint it calls) will only return the NaPTAN ID for a "hub", which is a collection of stops. Hubs themselves (as opposed to the stops) will not yield any arrivals data, and the stops won't always be returned in the data.
-- Bike point: These are of the form `BikePoints_<n>`, where `<n>` is an integer, eg, `BikePoints_427`. Use `ptt search bike <search string>` to search for relevant bike point IDs.
+  - You can try `bptt tfl search stop <search string>`. However, note that often that command (like the API endpoint it calls) will only return the NaPTAN ID for a "hub", which is a collection of stops. Hubs themselves (as opposed to the stops) will not yield any arrivals data, and the stops won't always be returned in the data.
+- Bike point: These are of the form `BikePoints_<n>`, where `<n>` is an integer, eg, `BikePoints_427`. Use `bptt search bike <search string>` to search for relevant bike point IDs.
 
 The `nre departures` command takes the CRS code (which must be uppercase) of the relevant rail station, eg, `KGX` for King's Cross.
-There isn't currently a way to search for CRS codes from within `ptt` but you can look them up at http://www.railwaycodes.org.uk/crs/crs0.shtm.
+There isn't currently a way to search for CRS codes from within `bptt` but you can look them up at http://www.railwaycodes.org.uk/crs/crs0.shtm.
 
 For convenience you can set aliases for stop IDs, bike point IDs and CRS codes in the configuration file.
 
 ## API keys
 
-`ptt` is just a simple interface to a number of APIs. These APIs generally take API keys. For the TfL API, a key is
+`bptt` is just a simple interface to a number of APIs. These APIs generally take API keys. For the TfL API, a key is
 optional but recommended. Currently the API will serve requests without an API key, but there is no guarantee this will
 continue or you won't get rate limited. The other APIs require API keys. You can get these at:
 
@@ -46,23 +46,23 @@ continue or you won't get rate limited. The other APIs require API keys. You can
 
 The relevant API key can be passed using the `--api-key` flag or can be specified in the config file.
 
-`ptt` does not perform any caching of data so it is up to the user to ensure it is used in compliance with the
+`bptt` does not perform any caching of data so it is up to the user to ensure it is used in compliance with the
 applicable API terms.
 
 ## Configuration
 
-The behaviour of `ptt` can be configured by command line flags or though a TOML-based configuration file. You can always
-call `ptt` or its sub-commands with `-h` to view a list of supported flags.
+The behaviour of `bptt` can be configured by command line flags or though a TOML-based configuration file. You can always
+call `bptt` or its sub-commands with `-h` to view a list of supported flags.
 
-You can point `ptt` to a specific config file location by passing the `--config` flag. Otherwise, it will use the
+You can point `bptt` to a specific config file location by passing the `--config` flag. Otherwise, it will use the
 [ConfigDir](https://github.com/kirsle/configdir) library to determine the "normal" place to look for a config file (for
-example, on Linux it will look for `$HOME/.config/ptt/config.toml`).
+example, on Linux it will look for `$HOME/.config/bptt/config.toml`).
 
 The repo contains a documented example `config.toml` file.
 
 ## Output
 
-`ptt` will output the desired data in a table format. Spaces are used for padding and tabs to separate columns, so it
+`bptt` will output the desired data in a table format. Spaces are used for padding and tabs to separate columns, so it
 works best in a terminal environment using a monospace font. 
 
 Passing the `--color` flag will use color in the output, where appropriate. For example, bad news (disrupted status,
@@ -92,7 +92,7 @@ Passing the `--header` flag will include a header row in the output with a short
 ## Some random examples
 
 ```
-$ ptt tfl modestatus tube
+$ bptt tfl modestatus tube
 Bakerloo          	Good Service
 Central           	Good Service
 Circle            	Good Service
@@ -107,7 +107,7 @@ Waterloo & City   	Good Service
 ```
 
 ```
-$ ptt --header tfl status 470 rb1 london-cable-car
+$ bptt --header tfl status 470 rb1 london-cable-car
 Line               	Status      
 470                	Good Service
 IFS Cloud Cable Car	Good Service
@@ -115,7 +115,7 @@ RB1                	Good Service
 ```
 
 ```
-$ ptt tfl search bike southwark --header
+$ bptt tfl search bike southwark --header
 Name                          	ID            	Latitude 	Longitude
 Webber Street , Southwark     	BikePoints_80 	51.500693	-0.102091
 Colombo Street, Southwark     	BikePoints_240	51.505459	-0.105692
@@ -125,13 +125,13 @@ Southwark Street, Bankside    	BikePoints_803	51.505409	-0.098341
 ```
 
 ```
-$ ptt --header tfl bikes BikePoints_240
+$ bptt --header tfl bikes BikePoints_240
 Station                  	Bikes	E-Bikes	Empty docks
 Colombo Street, Southwark	7    	1      	6          
 ```
 
 ```
-$ go run . tfl arrivals 490008275H --col-size -1,9,-1
+$ bptt tfl arrivals 490008275H --col-size -1,9,-1
 17      Archway         34s   
 46      Paddingt…       4m36s 
 17      Archway         14m54s
@@ -140,7 +140,7 @@ $ go run . tfl arrivals 490008275H --col-size -1,9,-1
 ```
 
 ```
-$ ptt waqi London --header
+$ bptt waqi London --header
 AQI	Description
 9  	Good 
 ```
