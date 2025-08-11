@@ -24,7 +24,7 @@ func request[T any](url string, apiKey string) (T, error) {
 	if err != nil {
 		return t, err
 	}
-	req.Header.Set("User-Agent", "ptt")
+	req.Header.Set("User-Agent", "bptt")
 	if len(apiKey) > 0 {
 		req.Header.Set("app_key", apiKey)
 	}

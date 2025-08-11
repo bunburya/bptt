@@ -1,10 +1,10 @@
 package tfl
 
 import (
+	"bptt/config"
+	"bptt/output"
 	"encoding/json"
 	"fmt"
-	"ptt/config"
-	"ptt/output"
 	"slices"
 	"strconv"
 

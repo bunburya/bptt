@@ -107,7 +107,7 @@ func (t *Table) Timestamp() {
 	t.SetFooter(fmt.Sprintf("Last updated: %s", timestamp))
 }
 
-func (t *Table) Print(sep string, padded bool, withColor bool, emptyMsg string, fixColSize []int) {
+func (t *Table) Sprint(options Options) string {
 	var s string
 	var rows []Row
 	if t.header != nil {
@@ -131,50 +131,78 @@ func (t *Table) Print(sep string, padded bool, withColor bool, emptyMsg string, 
 			maxColSize[i] = max(maxColSize[i], cellLen)
 		}
 	}
-	for i := range min(len(maxColSize), len(fixColSize)) {
-		if fixColSize[i] >= 0 {
-			maxColSize[i] = fixColSize[i]
+	for i := range min(len(maxColSize), len(options.ColSize)) {
+		if options.ColSize[i] >= 0 {
+			maxColSize[i] = options.ColSize[i]
 		}
 
 	}
-	for _, row := range rows {
-		for i, cell := range row.cells {
-			s += cell.Sprint(withColor, maxColSize[i], true)
-			if padded {
-				padding := maxColSize[i] - cell.rawLen
-				if padding > 0 {
-					s += strings.Repeat(" ", padding)
+
+	var nRowsToPrint int
+	if options.Rows >= 0 {
+		nRowsToPrint = options.Rows
+		if t.footer != "" {
+			nRowsToPrint -= 1
+		}
+	} else {
+		nRowsToPrint = len(rows)
+	}
+	start := 0
+	if (len(t.rows) == 0) && (options.Rows > 0) {
+		// If there is no data to print, print the empty message.
+		s += fmt.Sprintln(options.EmptyMsg)
+		start += 1
+	}
+	for i := start; i < nRowsToPrint; i++ {
+		if i < len(rows) {
+			row := rows[i]
+			for i, cell := range row.cells {
+				s += cell.Sprint(options.Color, maxColSize[i], true)
+				if options.Padded {
+					padding := maxColSize[i] - cell.rawLen
+					if padding > 0 {
+						s += strings.Repeat(" ", padding)
+					}
+				}
+				if i < len(row.cells)-1 {
+					s += options.Separator
+				} else {
+					s += "\n"
 				}
 			}
-			if i < len(row.cells)-1 {
-				s += sep
-			} else {
-				s += "\n"
-			}
+		} else {
+			s += "\n"
 		}
 	}
-	if len(t.rows) == 0 {
-		s += fmt.Sprintln(emptyMsg)
-	}
-	if t.footer != "" {
+	if (t.footer != "") && ((options.Rows > 1) || (options.Rows < 0)) {
 		s += t.footer + "\n"
 	}
-	fmt.Print(s)
-	//fmt.Printf("%q", s)
+	return s
+}
+
+func (t *Table) Print(options Options) {
+	fmt.Print(t.Sprint(options))
 }
 
 type Options struct {
+	Separator string
+	Padded    bool
 	Color     bool
+	EmptyMsg  string
+	ColSize   []int
+	Rows      int
 	Header    bool
 	Timestamp bool
-	ColSize   []int
 }
 
 func OptionsFromConfig() Options {
+	sep := "\t"
+	emptyMsg := "no data available"
 	withColor := viper.GetBool("color")
 	withHeader := viper.GetBool("header")
 	withTimestamp := viper.GetBool("timestamp")
 	colSize := viper.GetIntSlice("column_size")
+	rows := viper.GetInt("rows")
 	color.NoColor = !withColor
-	return Options{withColor, withHeader, withTimestamp, colSize}
+	return Options{sep, true, withColor, emptyMsg, colSize, rows, withHeader, withTimestamp}
 }

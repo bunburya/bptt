@@ -1,15 +1,21 @@
+# This is an example configuration file for `bptt`. The comments and values below are intended to illustrate how you can
+# configure `bptt` and do not necessarily reflect the default values.
+
 # Whether to use colour in the output.
 color = false
 # Whether the output should include a header row with the column names.
 header = false
 # Whether the output should include a "Last updated" timestamp at the end.
 timestamp = false
+# Number of rows to print (output is truncated or padded as necessary). A negative number (the default) does not fix
+# the number of rows in the output.
+rows = 5
 
 # Options related to the `tfl` command.
 [tfl]
 
 # TfL API key.
-api_key = ""
+api_key = "YOUR_API_KEY_HERE"
 
 # Mapping of aliases to NaPTAN IDs. Where a command requires a NaPTAN ID as an argument, you can use the alias instead.
 # Aliases should be alphanumeric and not contain spaces.
@@ -26,7 +32,7 @@ cheapside = "BikePoints_427"
 [nre]
 
 # NRE API key.
-api_key = ""
+api_key = "YOUR_API_KEY_HERE"
 
 # Mapping of aliases to CRS codes. Where a command requires a CRS code as an argument, you can use the alias instead.
 # Aliases should be alphanumeric and not contain spaces.
@@ -38,4 +44,4 @@ kx = "KGX"
 [waqi]
 
 # WAQI API key.
-api_key = ""
+api_key = "YOUR_API_KEY_HERE"

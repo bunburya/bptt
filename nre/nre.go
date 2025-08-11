@@ -1,9 +1,9 @@
 package nre
 
 import (
+	"bptt/config"
+	"bptt/output"
 	"fmt"
-	"ptt/config"
-	"ptt/output"
 	"slices"
 	"strings"
 

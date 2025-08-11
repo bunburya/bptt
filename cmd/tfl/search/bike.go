@@ -1,8 +1,8 @@
 package search
 
 import (
-	"ptt/output"
-	"ptt/tfl"
+	"bptt/output"
+	"bptt/tfl"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -21,7 +21,7 @@ var searchBikeCmd = &cobra.Command{
 		if err != nil {
 			return nil
 		}
-		table.Print("\t", true, opt.Color, "no data available", opt.ColSize)
+		table.Print(opt)
 		return nil
 	},
 }

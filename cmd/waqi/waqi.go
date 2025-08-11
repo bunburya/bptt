@@ -1,8 +1,8 @@
 package waqi
 
 import (
-	"ptt/output"
-	"ptt/waqi"
+	"bptt/output"
+	"bptt/waqi"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -20,7 +20,7 @@ var AqiCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		table.Print("\t", true, opt.Color, "no data available", opt.ColSize)
+		table.Print(opt)
 		return nil
 	},
 }

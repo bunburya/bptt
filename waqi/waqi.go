@@ -1,13 +1,13 @@
 package waqi
 
 import (
+	"bptt/output"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"ptt/output"
 
 	"github.com/fatih/color"
 )
@@ -95,7 +95,7 @@ func request(url string) (aqi, error) {
 	if err != nil {
 		return a, err
 	}
-	req.Header.Set("User-Agent", "ptt")
+	req.Header.Set("User-Agent", "bptt")
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return a, err

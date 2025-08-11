@@ -1,6 +1,6 @@
-# `ptt`
+# `bptt`
 
-`ptt` (**P**ublic **T**ransport in the **T**erminal) is a simple command line application that displays information
+`bptt` (**B**ritish **P**ublic **T**ransport in the **T**erminal) is a simple command line application that displays information
 about various public transport services. Currently the focus is on London / the UK, and the main suppored services are
 Transport for London (TfL) and National Rail.
 

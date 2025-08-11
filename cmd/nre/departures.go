@@ -1,9 +1,9 @@
 package nre
 
 import (
+	"bptt/nre"
+	"bptt/output"
 	"errors"
-	"ptt/nre"
-	"ptt/output"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -29,7 +29,7 @@ var departuresCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		table.Print("\t", true, opt.Color, "no data available", opt.ColSize)
+		table.Print(opt)
 		return nil
 	},
 }

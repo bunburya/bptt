@@ -1,7 +1,7 @@
 package tfl
 
 import (
-	"ptt/cmd/tfl/search"
+	"bptt/cmd/tfl/search"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

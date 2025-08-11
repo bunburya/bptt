@@ -1,8 +1,8 @@
 package tfl
 
 import (
-	"ptt/output"
-	"ptt/tfl"
+	"bptt/output"
+	"bptt/tfl"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -15,11 +15,11 @@ var bikesCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		apiKey := viper.GetString("tfl.api_key")
 		opt := output.OptionsFromConfig()
-		t, err := tfl.BikesTable(args, apiKey, opt)
+		table, err := tfl.BikesTable(args, apiKey, opt)
 		if err != nil {
 			return err
 		}
-		t.Print("\t", true, opt.Color, "no data available", opt.ColSize)
+		table.Print(opt)
 		return nil
 	},
 }

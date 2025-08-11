@@ -1,10 +1,10 @@
 package tfl
 
 import (
+	"bptt/output"
 	"encoding/json"
 	"fmt"
 	"net/url"
-	"ptt/output"
 	"slices"
 	"strings"
 

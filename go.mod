@@ -1,4 +1,4 @@
-module ptt
+module bptt
 
 go 1.24
 

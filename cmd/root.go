@@ -1,11 +1,11 @@
 package cmd
 
 import (
+	"bptt/cmd/nre"
+	"bptt/cmd/tfl"
+	"bptt/cmd/waqi"
+	"bptt/config"
 	"os"
-	"ptt/cmd/nre"
-	"ptt/cmd/tfl"
-	"ptt/cmd/waqi"
-	"ptt/config"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -13,9 +13,9 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "ptt",
+	Use:   "bptt",
 	Short: "Access information about public transport in the terminal.",
-	Long: `ptt is a command-line tool to easily access information about the current status of various public transport
+	Long: `bptt is a command-line tool to easily access information about the current status of various public transport
 services. Currently the focus is on services available in and around London, UK. For example, you can view the current
 service status of tube lines, the next arrivals at your local bus stop or departures from your local train station.`,
 }
@@ -50,4 +50,6 @@ func init() {
 	_ = viper.BindPFlag("timestamp", rootCmd.PersistentFlags().Lookup("timestamp"))
 	rootCmd.PersistentFlags().IntSlice("col-size", []int{}, "set fixed width for each column in output")
 	_ = viper.BindPFlag("column_size", rootCmd.PersistentFlags().Lookup("col-size"))
+	rootCmd.PersistentFlags().Int("rows", -1, "print fixed number of rows in output")
+	_ = viper.BindPFlag("rows", rootCmd.PersistentFlags().Lookup("rows"))
 }

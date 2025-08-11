@@ -31,13 +31,14 @@ func InitConfig() {
 	viper.SetDefault("color", false)
 	viper.SetDefault("header", false)
 	viper.SetDefault("timestamp", false)
+	viper.SetDefault("rows", -1)
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
 	confFile := viper.GetString("config")
 	if confFile != "" {
 		viper.SetConfigFile(confFile)
 	} else {
-		confDir := configdir.LocalConfig("ptt")
+		confDir := configdir.LocalConfig("bptt")
 		viper.AddConfigPath(confDir)
 	}
 	_ = viper.ReadInConfig()

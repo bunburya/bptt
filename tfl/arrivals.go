@@ -1,10 +1,10 @@
 package tfl
 
 import (
+	"bptt/config"
+	"bptt/output"
 	"errors"
 	"fmt"
-	"ptt/config"
-	"ptt/output"
 	"slices"
 	"sort"
 	"time"
