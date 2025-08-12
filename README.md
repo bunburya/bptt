@@ -94,8 +94,9 @@ Passing the `--header` flag will include a header row in the output with a short
 [`wtfutil`](https://wtfutil.com/) is a dashboard for the terminal. `bptt` is in no way affiliated with `wtfutil` (nor am
 I), but a large part of the reason I wrote `bptt` was to be able to present public transport information in a dashboard
 format, so the file `examples/wtfutil/config.yml` in this repo is an example config file for `wtfutil` that will display
-various bits of information about public transport around Charing Cross in London. And the file at
-`examples/wtfutil/screenshot.jpg` shows you what the output will look like.
+various bits of information about public transport around Charing Cross in London, assuming that you have a `bptt`
+config file with the relevant API keys included. The file at `examples/wtfutil/screenshot.jpg` shows you what the output
+will look like.
 
 ## Some random examples
 

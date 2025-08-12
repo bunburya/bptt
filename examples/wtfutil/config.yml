@@ -13,7 +13,7 @@ wtf:
       title: "Tube/DLR/Elizabeth"
       enabled: true
       type: cmdrunner
-      cmd: "/home/alan/bin/bptt"
+      cmd: "bptt"
       args:
         [
           "--color",
@@ -36,7 +36,7 @@ wtf:
       title: "Buses - Strand"
       enabled: true
       type: cmdrunner
-      cmd: "/home/alan/bin/bptt"
+      cmd: "bptt"
       args:
         [
           "tfl",
@@ -58,7 +58,7 @@ wtf:
       title: "Buses - Northumberland Ave"
       enabled: true
       type: cmdrunner
-      cmd: "/home/alan/bin/bptt"
+      cmd: "bptt"
       args: ["tfl", "arrivals", "490013767X", "--rows", "8", "--col-size", "3,15,7", "--timestamp"]
       position:
         top: 1
@@ -70,7 +70,7 @@ wtf:
       title: "Train Departures - Charing Cross"
       enabled: true
       type: cmdrunner
-      cmd: "/home/alan/bin/bptt"
+      cmd: "bptt"
       args:
         [
           "--color",
@@ -93,7 +93,7 @@ wtf:
       title: "Bikes"
       enabled: true
       type: cmdrunner
-      cmd: "/home/alan/bin/bptt"
+      cmd: "bptt"
       args:
         [
           "tfl",
