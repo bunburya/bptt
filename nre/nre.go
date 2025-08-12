@@ -49,7 +49,6 @@ func DeparturesTable(
 	callPoints []string,
 	count int,
 	apiKey string,
-	showPlatform bool,
 	options output.Options,
 ) (output.Table, error) {
 	table := output.Table{}
@@ -68,15 +67,9 @@ func DeparturesTable(
 	}
 
 	if options.Header {
-		var pHeader string
-		if showPlatform {
-			pHeader = "Platform"
-		} else {
-			pHeader = ""
-		}
 		table.SetHeader(output.NewRow(
 			output.NewCell("Destination", color.New(color.Bold)),
-			output.NewCell(pHeader, color.New(color.Bold)),
+			output.NewCell("Platform", color.New(color.Bold)),
 			output.NewCell("STD", color.New(color.Bold)),
 			output.NewCell("ETD", color.New(color.Bold)),
 		))
@@ -100,7 +93,7 @@ func DeparturesTable(
 			etdColor = etdColor.Add(color.Bold)
 		}
 		var platform string
-		if (!showPlatform) || (s.Platform == nil) {
+		if s.Platform == nil {
 			platform = ""
 		} else {
 			platform = fmt.Sprintf("Platform %s", *s.Platform)

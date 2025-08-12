@@ -121,7 +121,7 @@ func BikesTable(bikePointIds []string, apiKey string, options output.Options) (o
 			output.NewCell("Station", color.New(color.Bold)),
 			output.NewCell("Bikes", color.New(color.Bold)),
 			output.NewCell("E-Bikes", color.New(color.Bold)),
-			output.NewCell("Empty docks", color.New(color.Bold)),
+			output.NewCell("Empty", color.New(color.Bold)),
 		))
 	}
 	for _, bp := range bikePoints {

@@ -22,10 +22,9 @@ var departuresCmd = &cobra.Command{
 			return errors.New("API key is required")
 		}
 		callPoints, _ := cmd.Flags().GetStringSlice("calls")
-		showPlatform, _ := cmd.Flags().GetBool("platform")
 		count, _ := cmd.Flags().GetInt("count")
 		opt := output.OptionsFromConfig()
-		table, err := nre.DeparturesTable(args[0], callPoints, count, apiToken, showPlatform, opt)
+		table, err := nre.DeparturesTable(args[0], callPoints, count, apiToken, opt)
 		if err != nil {
 			return err
 		}

@@ -1,0 +1,117 @@
+wtf:
+  colors:
+    border:
+      focusable: darkslateblue
+      focused: orange
+      normal: gray
+  grid:
+    rows: [10, 10, 10, 10, 10, 10, 10, 50]
+    columns: [20, 20, 20, 20, 20, 20, 20, 20, 20, 100]
+  refreshInterval: 5m
+  mods:
+    linestatus:
+      title: "Tube/DLR/Elizabeth"
+      enabled: true
+      type: cmdrunner
+      cmd: "/home/alan/bin/bptt"
+      args:
+        [
+          "--color",
+          "tfl",
+          "modestatus",
+          "tube",
+          "dlr",
+          "elizabeth-line",
+          "--rows",
+          "18",
+          "--timestamp",
+        ]
+      position:
+        top: 0
+        left: 0
+        height: 2
+        width: 2
+      refreshInterval: 5m
+    busarrivals1:
+      title: "Buses - Strand"
+      enabled: true
+      type: cmdrunner
+      cmd: "/home/alan/bin/bptt"
+      args:
+        [
+          "tfl",
+          "arrivals",
+          "490013766F",
+          "--rows",
+          "8",
+          "--col-size",
+          "3,15,7",
+          "--timestamp",
+        ]
+      position:
+        top: 0
+        left: 2
+        height: 1
+        width: 2
+      refreshInterval: 2m
+    busarrivals2:
+      title: "Buses - Northumberland Ave"
+      enabled: true
+      type: cmdrunner
+      cmd: "/home/alan/bin/bptt"
+      args: ["tfl", "arrivals", "490013767X", "--rows", "8", "--col-size", "3,15,7", "--timestamp"]
+      position:
+        top: 1
+        left: 2
+        height: 1
+        width: 2
+      refreshInterval: 3m
+    traindepartures:
+      title: "Train Departures - Charing Cross"
+      enabled: true
+      type: cmdrunner
+      cmd: "/home/alan/bin/bptt"
+      args:
+        [
+          "--color",
+          "nre",
+          "departures",
+          "CHX",
+          "--rows",
+          "8",
+          "--col-size",
+          "25,11,5,9",
+          "--timestamp",
+        ]
+      position:
+        top: 0
+        left: 4
+        height: 1
+        width: 4
+      refreshInterval: 3m
+    bikes:
+      title: "Bikes"
+      enabled: true
+      type: cmdrunner
+      cmd: "/home/alan/bin/bptt"
+      args:
+        [
+          "tfl",
+          "--color",
+          "bikes",
+          "BikePoints_341",
+          "BikePoints_354",
+          "BikePoints_229",
+          "--header",
+          "--rows",
+          "8",
+          "--col-size",
+          "30,10,10,10",
+          "--timestamp",
+        ]
+      position:
+        top: 1
+        left: 4
+        height: 1
+        width: 4
+      refreshInterval: 3m
