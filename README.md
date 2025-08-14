@@ -65,9 +65,18 @@ The repo contains a documented example `config.toml` file.
 `bptt` will output the desired data in a table format. Spaces are used for padding and tabs to separate columns, so it
 works best in a terminal environment using a monospace font. 
 
+Passing the `--header` flag will include a header row in the output with a short name for each column. Passing the
+`--timestamp` flag will include a "Last updated" timestamp at the bottom of the output.
+
 Passing the `--color` flag will use color in the output, where appropriate. For example, bad news (disrupted status,
 late services, etc) may be displayed in yellow or red, whereas good news may be displayed in green. This uses ANSI
 escape codes to format the output, so again, it works best in a terminal that supports such escape codes.
+
+Passing `--rows` with an integer fixes the number of rows in the output. If there is more data than will fit on that
+number of rows, the rest of the data will not be displayed. Conversely, if there is *less* data than will fill that
+number of rows, the output will be padded with blank lines. If `--header` or `--timestamp` are included, these will be
+counted in the number of rows, and the timestamp will always be displayed on the last line of the output (after any
+padding blank lines).
 
 The `--col-size` flag allows you to fix the size of each column in the output. It should be a comma-separated list of
 integers. Each integer is the width in terminal characters of the corresponding column. If the text to be displayed in a
@@ -86,9 +95,6 @@ calling the same command (as different commands will output different numbers of
 Remember that tabs are used to separate columns, so column `n` won't always start one character after the end of column
 `n-1`.
 
-Passing the `--header` flag will include a header row in the output with a short name for each column. Passing the
-`--timestamp` flag will include a "Last updated" timestamp at the bottom of the output.
-
 ## Example: Use with `wtfutil`
 
 [`wtfutil`](https://wtfutil.com/) is a dashboard for the terminal. `bptt` is in no way affiliated with `wtfutil` (nor am
@@ -98,7 +104,7 @@ various bits of information about public transport around Charing Cross in Londo
 config file with the relevant API keys included. The file at `examples/wtfutil/screenshot.jpg` shows you what the output
 will look like.
 
-## Some random examples
+## Examples of usage in the terminal
 
 ```
 $ bptt tfl modestatus tube
