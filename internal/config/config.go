@@ -28,10 +28,6 @@ func ResolveAliases(configKey string, aliases []string) []string {
 }
 
 func InitConfig() {
-	viper.SetDefault("color", false)
-	viper.SetDefault("header", false)
-	viper.SetDefault("timestamp", false)
-	viper.SetDefault("rows", -1)
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
 	confFile := viper.GetString("config")

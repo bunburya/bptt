@@ -52,4 +52,9 @@ func init() {
 	_ = viper.BindPFlag("column_size", rootCmd.PersistentFlags().Lookup("col-size"))
 	rootCmd.PersistentFlags().Int("rows", -1, "print fixed number of rows in output")
 	_ = viper.BindPFlag("rows", rootCmd.PersistentFlags().Lookup("rows"))
+	rootCmd.PersistentFlags().String("sep", "\t", "string to separate columns")
+	_ = viper.BindPFlag("separator", rootCmd.PersistentFlags().Lookup("sep"))
+	rootCmd.PersistentFlags().String("empty-msg", "no data available",
+		"message to display if no data available")
+	_ = viper.BindPFlag("empty_msg", rootCmd.PersistentFlags().Lookup("empty-msg"))
 }

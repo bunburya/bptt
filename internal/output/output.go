@@ -148,7 +148,7 @@ func (t *Table) Sprint(options Options) string {
 		nRowsToPrint = len(rows)
 	}
 	start := 0
-	if (len(t.rows) == 0) && (options.Rows > 0) {
+	if (len(t.rows) == 0) && (options.Rows != 0) {
 		// If there is no data to print, print the empty message.
 		s += fmt.Sprintln(options.EmptyMsg)
 		start += 1
@@ -196,8 +196,8 @@ type Options struct {
 }
 
 func OptionsFromConfig() Options {
-	sep := "\t"
-	emptyMsg := "no data available"
+	sep := viper.GetString("separator")
+	emptyMsg := viper.GetString("empty_msg")
 	withColor := viper.GetBool("color")
 	withHeader := viper.GetBool("header")
 	withTimestamp := viper.GetBool("timestamp")
