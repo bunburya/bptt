@@ -1,7 +1,7 @@
 package tfl
 
 import (
-	"bptt/output"
+	"bptt/internal/output"
 	"encoding/json"
 	"fmt"
 	"net/url"

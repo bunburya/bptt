@@ -1,8 +1,8 @@
 package search
 
 import (
-	"bptt/output"
-	"bptt/tfl"
+	"bptt/internal/output"
+	"bptt/internal/tfl"
 	"strings"
 
 	"github.com/spf13/cobra"

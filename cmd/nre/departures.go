@@ -1,8 +1,8 @@
 package nre
 
 import (
-	"bptt/nre"
-	"bptt/output"
+	"bptt/internal/nre"
+	"bptt/internal/output"
 	"errors"
 
 	"github.com/spf13/cobra"

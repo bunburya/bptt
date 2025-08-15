@@ -1,8 +1,8 @@
 package nre
 
 import (
-	"bptt/config"
-	"bptt/output"
+	"bptt/internal/config"
+	output2 "bptt/internal/output"
 	"fmt"
 	"slices"
 	"strings"
@@ -49,9 +49,9 @@ func DeparturesTable(
 	callPoints []string,
 	count int,
 	apiKey string,
-	options output.Options,
-) (output.Table, error) {
-	table := output.Table{}
+	options output2.Options,
+) (output2.Table, error) {
+	table := output2.Table{}
 	crs = config.ResolveAlias("nre.station_aliases", crs)
 	board, err := getDepartureBoard(crs, apiKey)
 	if err != nil {
@@ -67,11 +67,11 @@ func DeparturesTable(
 	}
 
 	if options.Header {
-		table.SetHeader(output.NewRow(
-			output.NewCell("Destination", color.New(color.Bold)),
-			output.NewCell("Platform", color.New(color.Bold)),
-			output.NewCell("STD", color.New(color.Bold)),
-			output.NewCell("ETD", color.New(color.Bold)),
+		table.SetHeader(output2.NewRow(
+			output2.NewCell("Destination", color.New(color.Bold)),
+			output2.NewCell("Platform", color.New(color.Bold)),
+			output2.NewCell("STD", color.New(color.Bold)),
+			output2.NewCell("ETD", color.New(color.Bold)),
 		))
 	}
 
@@ -82,12 +82,12 @@ func DeparturesTable(
 		var etdColor *color.Color
 		lowerEtd := strings.ToLower(s.ETD)
 		if (lowerEtd == "on time") || s.ETD == s.STD {
-			etdColor = output.SafetyColors["green"]
+			etdColor = output2.SafetyColors["green"]
 		} else if lowerEtd == "cancelled" {
-			etdColor = output.SafetyColors["red"]
+			etdColor = output2.SafetyColors["red"]
 		} else {
 			// Apparently not on time or cancelled, so presumably delayed
-			etdColor = output.SafetyColors["yellow"]
+			etdColor = output2.SafetyColors["yellow"]
 		}
 		if etdColor != nil {
 			etdColor = etdColor.Add(color.Bold)
@@ -98,11 +98,11 @@ func DeparturesTable(
 		} else {
 			platform = fmt.Sprintf("Platform %s", *s.Platform)
 		}
-		table.AddRow(output.NewRow(
-			output.NewCell(s.Destination.Name, nil),
-			output.NewCell(platform, nil),
-			output.NewCell(s.STD, nil),
-			output.NewCell(s.ETD, etdColor),
+		table.AddRow(output2.NewRow(
+			output2.NewCell(s.Destination.Name, nil),
+			output2.NewCell(platform, nil),
+			output2.NewCell(s.STD, nil),
+			output2.NewCell(s.ETD, etdColor),
 		))
 	}
 	if options.Timestamp {

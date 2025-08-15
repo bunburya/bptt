@@ -1,8 +1,8 @@
 package tfl
 
 import (
-	"bptt/config"
-	"bptt/output"
+	"bptt/internal/config"
+	"bptt/internal/output"
 	"errors"
 	"fmt"
 	"slices"

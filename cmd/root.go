@@ -4,7 +4,7 @@ import (
 	"bptt/cmd/nre"
 	"bptt/cmd/tfl"
 	"bptt/cmd/waqi"
-	"bptt/config"
+	"bptt/internal/config"
 	"os"
 
 	"github.com/spf13/cobra"

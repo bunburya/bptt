@@ -1,7 +1,7 @@
 package waqi
 
 import (
-	"bptt/output"
+	output2 "bptt/internal/output"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -44,18 +44,18 @@ func (a *aqi) description() string {
 func (a *aqi) color() *color.Color {
 	n := *a
 	if n <= 50 {
-		return output.SafetyColors["green"]
+		return output2.SafetyColors["green"]
 	} else if n <= 150 {
-		return output.SafetyColors["yellow"]
+		return output2.SafetyColors["yellow"]
 	} else {
-		return output.SafetyColors["red"]
+		return output2.SafetyColors["red"]
 	}
 }
 
-func (a *aqi) toRow() output.Row {
-	return output.NewRow(
-		output.NewCell(fmt.Sprintf("%d", *a), nil),
-		output.NewCell(a.description(), a.color().Add(color.Bold)),
+func (a *aqi) toRow() output2.Row {
+	return output2.NewRow(
+		output2.NewCell(fmt.Sprintf("%d", *a), nil),
+		output2.NewCell(a.description(), a.color().Add(color.Bold)),
 	)
 }
 
@@ -119,17 +119,17 @@ func getLatLonForecast(lat float64, lon float64, apiKey string) (aqi, error) {
 	return request(latLonUrl(lat, lon, apiKey))
 }
 
-func CityAqiTable(city string, apiKey string, options output.Options) (output.Table, error) {
-	t := output.Table{}
+func CityAqiTable(city string, apiKey string, options output2.Options) (output2.Table, error) {
+	t := output2.Table{}
 	query := url.PathEscape(city)
 	f, err := getCityForecast(query, apiKey)
 	if err != nil {
 		return t, err
 	}
 	if options.Header {
-		t.SetHeader(output.NewRow(
-			output.NewCell("AQI", color.New(color.Bold)),
-			output.NewCell("Description", color.New(color.Bold)),
+		t.SetHeader(output2.NewRow(
+			output2.NewCell("AQI", color.New(color.Bold)),
+			output2.NewCell("Description", color.New(color.Bold)),
 		))
 	}
 	t.AddRow(f.toRow())

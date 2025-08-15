@@ -1,8 +1,8 @@
 package tfl
 
 import (
-	"bptt/output"
-	"bptt/tfl"
+	"bptt/internal/output"
+	"bptt/internal/tfl"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

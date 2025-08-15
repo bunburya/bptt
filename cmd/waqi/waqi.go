@@ -1,8 +1,8 @@
 package waqi
 
 import (
-	"bptt/output"
-	"bptt/waqi"
+	"bptt/internal/output"
+	"bptt/internal/waqi"
 	"strings"
 
 	"github.com/spf13/cobra"
